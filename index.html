@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar System Configurator</title>
+    <title>Edit Project</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,342 +11,51 @@
             background-color: #f4f4f9;
         }
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
-            display: flex;
-            gap: 20px;
-        }
-        .configurator {
-            flex: 1;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
-        .projects-list {
-            flex: 1;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
-        }
-        .projects-list h2 {
-            color: #007BFF;
+        .container h1 {
+            text-align: center;
             margin-bottom: 20px;
+            color: #007BFF;
         }
-        .projects-list ul {
-            list-style-type: none;
-            padding: 0;
+        .container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
         }
-        .projects-list li {
+        .container input, .container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .container button {
+            width: 100%;
             padding: 10px;
-            border-bottom: 1px solid #eee;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
-        .projects-list li:hover {
-            background-color: #f9f9f9;
+        .container button:hover {
+            background-color: #0056b3;
         }
-        .hidden {
-            display: none;
-        }
-        /* Add your existing CSS styles here */
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
         // Import the functions you need from the Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
-            authDomain: "configurator-e8f0b.firebaseapp.com",
-            projectId: "configurator-e8f0b",
-            storageBucket: "configurator-e8f0b.firebasestorage.app",
-            messagingSenderId: "680598761938",
-            appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-
-        // Initialize Firestore
-        const db = getFirestore(app);
-
-        // Hardcoded login credentials for demonstration
-        const validUsername = "user123";
-        const validPassword = "pass123";
-
-        // Login Function
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (username === validUsername && password === validPassword) {
-                // Hide login page and show configurator page
-                document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('configuratorPage').classList.remove('hidden');
-                // Load saved projects
-                loadProjects(username);
-            } else {
-                // Show error message
-                document.getElementById('errorMessage').classList.remove('hidden');
-            }
-        }
-
-        // Load Projects Function
-        async function loadProjects(username) {
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = ''; // Clear the list
-
-            const projectRef = doc(db, 'projects', username);
-            const projectDoc = await getDoc(projectRef);
-
-            if (projectDoc.exists()) {
-                const projects = projectDoc.data();
-                for (const [projectName, projectData] of Object.entries(projects)) {
-                    const li = document.createElement('li');
-                    li.textContent = projectName;
-                    li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
-                    projectsList.appendChild(li);
-                }
-            } else {
-                projectsList.innerHTML = '<li>No projects found.</li>';
-            }
-        }
-
-        // Load Project into Configurator
-        function loadProjectIntoConfigurator(project) {
-            document.getElementById('projectName').value = project.projectName;
-            document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
-            document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
-            document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
-            document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
-            document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
-            document.getElementById('batterySize').value = project.batterySize;
-            document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
-            document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
-        }
-
-        // Generate Quote Function
-        async function generateQuote() {
-            // Get values from Configurator
-            const projectName = document.getElementById('projectName').value;
-            const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
-            const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
-            const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
-            const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
-            const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
-            const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
-            const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
-            const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
-
-            // Calculate total price
-            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
-            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
-            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
-            const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
-            const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
-            const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
-
-            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
-
-            // Display values on the quote page
-            document.getElementById('quoteProjectName').textContent = projectName;
-            document.getElementById('quoteRoofType').textContent = roofType;
-            document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
-            document.getElementById('quoteSolarPanelAmount').textContent = solarPanelAmount;
-            document.getElementById('quoteInverterBrand').textContent = inverterBrand;
-            document.getElementById('quoteBatteryBrand').textContent = batteryBrand;
-            document.getElementById('quoteBatterySize').textContent = batterySize;
-            document.getElementById('quoteSmartMeterBrand').textContent = smartMeterBrand;
-            document.getElementById('quoteChargerType').textContent = chargerType;
-            document.getElementById('quoteTotalPrice').textContent = totalPrice.toFixed(2);
-
-            // Save project to Firestore
-            const project = {
-                projectName,
-                roofType,
-                solarPanelBrand,
-                solarPanelAmount,
-                inverterBrand,
-                batteryBrand,
-                batterySize,
-                smartMeterBrand,
-                chargerType,
-                totalPrice,
-            };
-            await saveProject(project);
-
-            // Reload projects list
-            loadProjects(validUsername);
-
-            // Hide configurator page and show quote page
-            document.getElementById('configuratorPage').classList.add('hidden');
-            document.getElementById('quotePage').classList.remove('hidden');
-        }
-
-        // Save Project Function
-        async function saveProject(project) {
-            const username = document.getElementById('username').value;
-            const projectRef = doc(db, 'projects', username); // Use username as the document ID
-            await setDoc(projectRef, { [project.projectName]: project }, { merge: true });
-        }
-
-        // Create New Project Function
-        function createNewProject() {
-            document.getElementById('quotePage').classList.add('hidden');
-            document.getElementById('configuratorPage').classList.remove('hidden');
-        }
-
-        // Print Quote Function
-        function printQuote() {
-            window.print();
-        }
-
-        // Attach functions to the window object for HTML onclick
-        window.login = login;
-        window.generateQuote = generateQuote;
-        window.createNewProject = createNewProject;
-        window.printQuote = printQuote;
-    </script>
-</head>
-<body>
-
-<!-- Login Page -->
-<div class="container" id="loginPage">
-    <h1>Login</h1>
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="Enter your username">
-    <label for="password">Password:</label>
-    <input type="password" id="password" placeholder="Enter your password">
-    <button onclick="login()">Login</button>
-    <div id="errorMessage" class="error-message hidden">Invalid username or password.</div>
-</div>
-
-<!-- Configurator Page (Hidden by Default) -->
-<div class="container hidden" id="configuratorPage">
-    <div class="configurator">
-        <h1>Solar System Configurator</h1>
-
-        <!-- Project Name -->
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" placeholder="Enter project name">
-
-        <!-- Solar Installation System -->
-        <div class="system">
-            <h2>Solar Installation</h2>
-            <label for="roofType">Roof Type:</label>
-            <select id="roofType">
-                <option value="0">Select Roof Type</option>
-                <option value="5000">Flat Roof - 5000 SEK</option>
-                <option value="6000">Sloped Roof - 6000 SEK</option>
-            </select>
-            <label for="solarPanelBrand">Solar Panel Brand:</label>
-            <select id="solarPanelBrand">
-                <option value="0">Select Solar Panel Brand</option>
-                <option value="900">DMEGC helsvart 450W glas/glas (Art.nr: DM450M10RT-B54HBB) - 900 SEK</option>
-                <option value="940">DMEGC helsvart 500W (Art.nr: DM500M10RT-60HBB) - 940 SEK</option>
-                <option value="1000">AIKO 455W helsvart Glas/glas (Art.nr: A455-MAH54Db) - 1000 SEK</option>
-                <option value="900">AIKO 455W helsvart (Art.nr: AIKO-A-MAH54Mb-455W) - 900 SEK</option>
-                <option value="900">Longi 440W Svart ram (Art.nr: LR5-54HTH-440M) - 900 SEK</option>
-                <option value="900">Longi 505W Helsvart (Art.nr: Longi LR7) - 900 SEK</option>
-                <option value="1030">Longi 530W Svart ram (Art.nr: LR5-66HTH-530M) - 1030 SEK</option>
-            </select>
-            <label for="solarPanelAmount">Number of Solar Panels:</label>
-            <input type="number" id="solarPanelAmount" placeholder="Enter number of panels" min="0">
-            <label for="inverterBrand">Inverter Brand:</label>
-            <select id="inverterBrand">
-                <option value="0">Select Inverter Brand</option>
-                <option value="3000">Brand A - 3000 SEK</option>
-                <option value="4000">Brand B - 4000 SEK</option>
-            </select>
-        </div>
-
-        <!-- Battery System -->
-        <div class="system">
-            <h2>Battery</h2>
-            <label for="batteryBrand">Battery Brand:</label>
-            <select id="batteryBrand">
-                <option value="0">Select Battery Brand</option>
-                <option value="700">Brand P - 700 SEK per kWh</option>
-                <option value="800">Brand Q - 800 SEK per kWh</option>
-            </select>
-            <label for="batterySize">Battery Size (kWh):</label>
-            <input type="number" id="batterySize" placeholder="Enter battery size" min="0">
-            <label for="smartMeterBrand">Smart Meter Brand:</label>
-            <select id="smartMeterBrand">
-                <option value="0">Select Smart Meter Brand</option>
-                <option value="500">Brand M - 500 SEK</option>
-                <option value="800">Brand N - 800 SEK</option>
-            </select>
-        </div>
-
-        <!-- Chargers System -->
-        <div class="system">
-            <h2>Chargers</h2>
-            <label for="chargerType">Charger Type:</label>
-            <select id="chargerType">
-                <option value="0">Select Charger Type</option>
-                <option value="1000">Type 1 - 1000 SEK</option>
-                <option value="1500">Type 2 - 1500 SEK</option>
-            </select>
-        </div>
-
-        <button onclick="generateQuote()">Generate Quote</button>
-    </div>
-
-    <!-- Saved Projects List -->
-    <div class="projects-list">
-        <h2>Saved Projects</h2>
-        <ul id="projectsList">
-            <!-- Projects will be dynamically added here -->
-        </ul>
-    </div>
-</div>
-
-<!-- Quote Page (Hidden by Default) -->
-<div class="container hidden" id="quotePage">
-    <div class="quote-page">
-        <header>
-            <h1>Your Solar System Quote</h1>
-            <p>Thank you for choosing us to power your home with clean, renewable energy!</p>
-        </header>
-        <div class="quote-details">
-            <div class="section solar-installation">
-                <h2>☀️ Solar Installation</h2>
-                <p><strong>Project Name:</strong> <span id="quoteProjectName"></span></p>
-                <p><strong>Roof Type:</strong> <span id="quoteRoofType"></span></p>
-                <p><strong>Solar Panel Brand:</strong> <span id="quoteSolarPanelBrand"></span></p>
-                <p><strong>Number of Panels:</strong> <span id="quoteSolarPanelAmount"></span></p>
-                <p><strong>Inverter Brand:</strong> <span id="quoteInverterBrand"></span></p>
-            </div>
-            <div class="section battery">
-                <h2>🔋 Battery</h2>
-                <p><strong>Battery Brand:</strong> <span id="quoteBatteryBrand"></span></p>
-                <p><strong>Battery Size:</strong> <span id="quoteBatterySize"></span> kWh</p>
-                <p><strong>Smart Meter Brand:</strong> <span id="quoteSmartMeterBrand"></span></p>
-            </div>
-            <div class="section chargers">
-                <h2>⚡ Chargers</h2>
-                <p><strong>Charger Type:</strong> <span id="quoteChargerType"></span></p>
-            </div>
-        </div>
-        <div class="total-price">
-            <h2>💰 Total Price</h2>
-            <p class="price"><span id="quoteTotalPrice"></span> SEK</p>
-            <p class="note">*Includes installation and warranty.</p>
-        </div>
-        <footer>
-            <p>📞 Contact us at <strong>123-456-7890</strong> for any questions.</p>
-            <p>🏠 Let’s make your home energy-efficient and sustainable!</p>
-        </footer>
-        <button onclick="printQuote()">Print Quote</button>
-        <button onclick="createNewProject()">Create New Project</button>
-    </div>
-</div>
-
-</body>
-</html>
+            apiKey: "
