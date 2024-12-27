@@ -42,9 +42,11 @@
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
+        // Import the functions you need from the Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
             authDomain: "configurator-e8f0b.firebaseapp.com",
@@ -54,28 +56,37 @@
             appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
+
+        // Initialize Firestore
         const db = getFirestore(app);
 
+        // Hardcoded login credentials for demonstration
         const validUsername = "user123";
         const validPassword = "pass123";
 
+        // Login Function
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
             if (username === validUsername && password === validPassword) {
+                // Hide login page and show overview page
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('overviewPage').classList.remove('hidden');
+                // Load saved projects
                 loadProjects(username);
             } else {
+                // Show error message
                 document.getElementById('errorMessage').classList.remove('hidden');
             }
         }
 
+        // Load Projects Function
         async function loadProjects(username) {
             const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = '';
+            projectsList.innerHTML = ''; // Clear the list
 
             const projectRef = doc(db, 'projects', username);
             const projectDoc = await getDoc(projectRef);
@@ -93,6 +104,7 @@
             }
         }
 
+        // Load Project into Configurator
         function loadProjectIntoConfigurator(project) {
             document.getElementById('projectName').value = project.projectName;
             document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
@@ -104,16 +116,21 @@
             document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
             document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
 
+            // Hide overview page and show configurator page
             document.getElementById('overviewPage').classList.add('hidden');
             document.getElementById('configuratorPage').classList.remove('hidden');
         }
 
+        // Go to Configurator for New Quote
         function goToConfigurator() {
+            // Hide overview page and show configurator page
             document.getElementById('overviewPage').classList.add('hidden');
             document.getElementById('configuratorPage').classList.remove('hidden');
         }
 
+        // Generate Quote Function
         async function generateQuote() {
+            // Get values from Configurator
             const projectName = document.getElementById('projectName').value;
             const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
             const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
@@ -124,6 +141,7 @@
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
             const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
 
+            // Calculate total price
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
             const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
@@ -133,6 +151,7 @@
 
             const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
 
+            // Display values on the quote page
             document.getElementById('quoteProjectName').textContent = projectName;
             document.getElementById('quoteRoofType').textContent = roofType;
             document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
@@ -144,6 +163,7 @@
             document.getElementById('quoteChargerType').textContent = chargerType;
             document.getElementById('quoteTotalPrice').textContent = totalPrice.toFixed(2);
 
+            // Save project to Firestore
             const project = {
                 projectName,
                 roofType,
@@ -158,27 +178,33 @@
             };
             await saveProject(project);
 
+            // Reload projects list
             loadProjects(validUsername);
 
+            // Hide configurator page and show quote page
             document.getElementById('configuratorPage').classList.add('hidden');
             document.getElementById('quotePage').classList.remove('hidden');
         }
 
+        // Save Project Function
         async function saveProject(project) {
             const username = document.getElementById('username').value;
-            const projectRef = doc(db, 'projects', username);
+            const projectRef = doc(db, 'projects', username); // Use username as the document ID
             await setDoc(projectRef, { [project.projectName]: project }, { merge: true });
         }
 
+        // Create New Project Function
         function createNewProject() {
             document.getElementById('quotePage').classList.add('hidden');
             document.getElementById('configuratorPage').classList.remove('hidden');
         }
 
+        // Print Quote Function
         function printQuote() {
             window.print();
         }
 
+        // Attach functions to the window object for HTML onclick
         window.login = login;
         window.generateQuote = generateQuote;
         window.createNewProject = createNewProject;
@@ -214,9 +240,7 @@
 <div class="container hidden" id="configuratorPage">
     <div class="configurator">
         <h1>Solar System Configurator</h1>
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" placeholder="Enter project name">
-        <!-- Add other configurator fields here -->
+        <!-- Add your configurator fields here -->
         <button onclick="generateQuote()">Generate Quote</button>
     </div>
 </div>
