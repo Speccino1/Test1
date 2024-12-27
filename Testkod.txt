@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Configurator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+        .container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        .container input, .container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .system {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+        }
+        .system h2 {
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+        .quote-page {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .quote-page header {
+            margin-bottom: 30px;
+        }
+        .quote-page header h1 {
+            color: #007BFF;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .quote-page header p {
+            color: #555;
+            font-size: 1.1em;
+        }
+        .quote-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .quote-details .section {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            text-align: left;
+        }
+        .quote-details .section h2 {
+            color: #007BFF;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .quote-details .section p {
+            margin: 10px 0;
+            color: #333;
+        }
+        .total-price {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 12px;
+        }
+        .total-price h2 {
+            color: #007BFF;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        .total-price .price {
+            font-size: 2.5em;
+            color: #007BFF;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .total-price .note {
+            color: #555;
+            font-size: 0.9em;
+        }
+        .quote-page footer {
+            margin-top: 30px;
+            color: #555;
+            font-size: 1em;
+        }
+        .quote-page footer p {
+            margin: 5px 0;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
+            .quote-page {
+                padding: 20px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .quote-page header h1 {
+                font-size: 2em;
+            }
+            .quote-details .section {
+                background-color: #fff;
+                border: 1px solid #ddd;
+            }
+            .total-price {
+                background-color: #fff;
+                border: 1px solid #ddd;
+            }
+            .quote-page footer {
+                margin-top: 20px;
+            }
+            .container button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div class="container" id="loginPage">
+    <h1>Login</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter your username">
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter your password">
+    <button onclick="login()">Login</button>
+    <div id="errorMessage" class="error-message hidden">Invalid username or password.</div>
+</div>
+
+<!-- Configurator Page (Hidden by Default) -->
+<div class="container hidden" id="configuratorPage">
+    <h1>Solar System Configurator</h1>
+
+    <!-- Solar Installation System -->
+    <div class="system">
+        <h2>Solar Installation</h2>
+        <label for="roofType">Roof Type:</label>
+        <select id="roofType">
+            <option value="0">Select Roof Type</option>
+            <option value="5000">Flat Roof - $5000</option>
+            <option value="6000">Sloped Roof - $6000</option>
+        </select>
+        <label for="solarPanelBrand">Solar Panel Brand:</label>
+        <select id="solarPanelBrand">
+            <option value="0">Select Solar Panel Brand</option>
+            <option value="1000">Brand X - $1000 per panel</option>
+            <option value="1200">Brand Y - $1200 per panel</option>
+        </select>
+        <label for="solarPanelAmount">Number of Solar Panels:</label>
+        <input type="number" id="solarPanelAmount" placeholder="Enter number of panels" min="0">
+        <label for="inverterBrand">Inverter Brand:</label>
+        <select id="inverterBrand">
+            <option value="0">Select Inverter Brand</option>
+            <option value="3000">Brand A - $3000</option>
+            <option value="4000">Brand B - $4000</option>
+        </select>
+    </div>
+
+    <!-- Battery System -->
+    <div class="system">
+        <h2>Battery</h2>
+        <label for="batteryBrand">Battery Brand:</label>
+        <select id="batteryBrand">
+            <option value="0">Select Battery Brand</option>
+            <option value="700">Brand P - $700 per kWh</option>
+            <option value="800">Brand Q - $800 per kWh</option>
+        </select>
+        <label for="batterySize">Battery Size (kWh):</label>
+        <input type="number" id="batterySize" placeholder="Enter battery size" min="0">
+        <label for="smartMeterBrand">Smart Meter Brand:</label>
+        <select id="smartMeterBrand">
+            <option value="0">Select Smart Meter Brand</option>
+            <option value="500">Brand M - $500</option>
+            <option value="800">Brand N - $800</option>
+        </select>
+    </div>
+
+    <!-- Chargers System -->
+    <div class="system">
+        <h2>Chargers</h2>
+        <label for="chargerType">Charger Type:</label>
+        <select id="chargerType">
+            <option value="0">Select Charger Type</option>
+            <option value="1000">Type 1 - $1000</option>
+            <option value="1500">Type 2 - $1500</option>
+        </select>
+    </div>
+
+    <button onclick="generateQuote()">Generate Quote</button>
+</div>
+
+<!-- Quote Page (Hidden by Default) -->
+<div class="container hidden" id="quotePage">
+    <div class="quote-page">
+        <header>
+            <h1>Your Solar System Quote</h1>
+            <p>Thank you for choosing us to power your home with clean, renewable energy!</p>
+        </header>
+        <div class="quote-details">
+            <div class="section solar-installation">
+                <h2>☀️ Solar Installation</h2>
+                <p><strong>Roof Type:</strong> <span id="quoteRoofType"></span></p>
+                <p><strong>Solar Panel Brand:</strong> <span id="quoteSolarPanelBrand"></span></p>
+                <p><strong>Number of Panels:</strong> <span id="quoteSolarPanelAmount"></span></p>
+                <p><strong>Inverter Brand:</strong> <span id="quoteInverterBrand"></span></p>
+            </div>
+            <div class="section battery">
+                <h2>🔋 Battery</h2>
+                <p><strong>Battery Brand:</strong> <span id="quoteBatteryBrand"></span></p>
+                <p><strong>Battery Size:</strong> <span id="quoteBatterySize"></span> kWh</p>
+                <p><strong>Smart Meter Brand:</strong> <span id="quoteSmartMeterBrand"></span></p>
+            </div>
+            <div class="section chargers">
+                <h2>⚡ Chargers</h2>
+                <p><strong>Charger Type:</strong> <span id="quoteChargerType"></span></p>
+            </div>
+        </div>
+        <div class="total-price">
+            <h2>💰 Total Price</h2>
+            <p class="price">$<span id="quoteTotalPrice"></span></p>
+            <p class="note">*Includes installation and warranty.</p>
+        </div>
+        <footer>
+            <p>📞 Contact us at <strong>123-456-7890</strong> for any questions.</p>
+            <p>🏠 Let’s make your home energy-efficient and sustainable!</p>
+        </footer>
+        <button onclick="printQuote()">Print Quote</button>
+    </div>
+</div>
+
+<script>
+    // Hardcoded login credentials for demonstration
+    const validUsername = "user123";
+    const validPassword = "pass123";
+
+    // Login Function
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username === validUsername && password === validPassword) {
+            // Hide login page and show configurator page
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
+        } else {
+            // Show error message
+            document.getElementById('errorMessage').classList.remove('hidden');
+        }
+    }
+
+    // Generate Quote Function
+    function generateQuote() {
+        // Get values from Solar Installation
+        const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
+        const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
+        const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
+        const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
+
+        // Get values from Battery
+        const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
+        const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
+        const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
+
+        // Get values from Chargers
+        const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
+
+        // Calculate total price
+        const roofTypeCost = parseFloat(document.getElementById('roofType').value);
+        const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
+        const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
+        const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
+        const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
+        const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
+
+        const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
+
+        // Display values on the quote page
+        document.getElementById('quoteRoofType').textContent = roofType;
+        document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
+        document.getElementById('quoteSolarPanelAmount').textContent = solarPanelAmount;
+        document.getElementById('quoteInverterBrand').textContent = inverterBrand;
+        document.getElementById('quoteBatteryBrand').textContent = batteryBrand;
+        document.getElementById('quoteBatterySize').textContent = batterySize;
+        document.getElementById('quoteSmartMeterBrand').textContent = smartMeterBrand;
+        document.getElementById('quoteChargerType').textContent = chargerType;
+        document.getElementById('quoteTotalPrice').textContent = totalPrice.toFixed(2);
+
+        // Hide configurator page and show quote page
+        document.getElementById('configuratorPage').classList.add('hidden');
+        document.getElementById('quotePage').classList.remove('hidden');
+    }
+
+    // Print Quote Function
+    function printQuote() {
+        window.print();
+    }
+</script>
+
+</body>
+</html>
