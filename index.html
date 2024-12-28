@@ -171,6 +171,28 @@
                 display: none;
             }
         }
+        .overview label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .overview input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .overview button {
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .overview button:hover {
+            background-color: #0056b3;
+        }
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
@@ -227,7 +249,7 @@
                 const projects = projectDoc.data();
                 for (const [projectName, projectData] of Object.entries(projects)) {
                     const li = document.createElement('li');
-                    li.textContent = projectName;
+                    li.textContent = `${projectName} - ${projectData.projectAddress}`;
                     li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
                     projectsList.appendChild(li);
                 }
@@ -239,6 +261,7 @@
         // Load Project into Configurator
         function loadProjectIntoConfigurator(project) {
             document.getElementById('projectName').value = project.projectName;
+            document.getElementById('projectAddress').value = project.projectAddress;
             document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
             document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
             document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
@@ -264,6 +287,7 @@
         async function generateQuote() {
             // Get values from Configurator
             const projectName = document.getElementById('projectName').value;
+            const projectAddress = document.getElementById('projectAddress').value;
             const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
             const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
             const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
@@ -285,6 +309,7 @@
 
             // Display values on the quote page
             document.getElementById('quoteProjectName').textContent = projectName;
+            document.getElementById('quoteProjectAddress').textContent = projectAddress;
             document.getElementById('quoteRoofType').textContent = roofType;
             document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
             document.getElementById('quoteSolarPanelAmount').textContent = solarPanelAmount;
@@ -298,6 +323,7 @@
             // Save project to Firestore
             const project = {
                 projectName,
+                projectAddress,
                 roofType,
                 solarPanelBrand,
                 solarPanelAmount,
@@ -342,6 +368,36 @@
             document.getElementById('overviewPage').classList.remove('hidden');
         }
 
+        // Filter Projects Function
+        async function filterProjects() {
+            const filterProjectName = document.getElementById('filterProjectName').value.toLowerCase();
+            const filterAddress = document.getElementById('filterAddress').value.toLowerCase();
+
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = ''; // Clear the list
+
+            const projectRef = doc(db, 'projects', validUsername);
+            const projectDoc = await getDoc(projectRef);
+
+            if (projectDoc.exists()) {
+                const projects = projectDoc.data();
+                for (const [projectName, projectData] of Object.entries(projects)) {
+                    // Check if the project matches the filter criteria
+                    if (
+                        projectName.toLowerCase().includes(filterProjectName) &&
+                        projectData.projectAddress.toLowerCase().includes(filterAddress)
+                    ) {
+                        const li = document.createElement('li');
+                        li.textContent = `${projectName} - ${projectData.projectAddress}`;
+                        li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
+                        projectsList.appendChild(li);
+                    }
+                }
+            } else {
+                projectsList.innerHTML = '<li>No projects found.</li>';
+            }
+        }
+
         // Attach functions to the window object for HTML onclick
         window.login = login;
         window.generateQuote = generateQuote;
@@ -349,6 +405,7 @@
         window.printQuote = printQuote;
         window.goToConfigurator = goToConfigurator;
         window.goToOverview = goToOverview;
+        window.filterProjects = filterProjects;
     </script>
 </head>
 <body>
@@ -371,6 +428,15 @@
     </div>
     <div class="overview">
         <h1>Saved Projects</h1>
+        <!-- Filter and Search Fields -->
+        <div>
+            <label for="filterProjectName">Filter by Project Name:</label>
+            <input type="text" id="filterProjectName" placeholder="Enter project name">
+            <label for="filterAddress">Filter by Address:</label>
+            <input type="text" id="filterAddress" placeholder="Enter address">
+            <button onclick="filterProjects()">Search</button>
+        </div>
+        <!-- Projects List -->
         <ul id="projectsList">
             <!-- Projects will be dynamically added here -->
         </ul>
@@ -384,6 +450,10 @@
     <!-- Project Name -->
     <label for="projectName">Project Name:</label>
     <input type="text" id="projectName" placeholder="Enter project name">
+
+    <!-- Address -->
+    <label for="projectAddress">Address:</label>
+    <input type="text" id="projectAddress" placeholder="Enter project address">
 
     <!-- Solar Installation System -->
     <div class="system">
@@ -459,6 +529,7 @@
             <div class="section solar-installation">
                 <h2>☀️ Solar Installation</h2>
                 <p><strong>Project Name:</strong> <span id="quoteProjectName"></span></p>
+                <p><strong>Address:</strong> <span id="quoteProjectAddress"></span></p>
                 <p><strong>Roof Type:</strong> <span id="quoteRoofType"></span></p>
                 <p><strong>Solar Panel Brand:</strong> <span id="quoteSolarPanelBrand"></span></p>
                 <p><strong>Number of Panels:</strong> <span id="quoteSolarPanelAmount"></span></p>
