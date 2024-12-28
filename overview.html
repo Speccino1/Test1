@@ -91,11 +91,12 @@
                     customerName: projectData.customerName,
                     projectAddress: projectData.projectAddress,
                     phoneNumber: projectData.phoneNumber,
+                    lastModified: projectData.lastModified || "Okänd", // Lägg till "senast ändrad"
                     projectData,
                 }));
                 displayProjects(projectsArray);
             } else {
-                document.getElementById('projectsTable').innerHTML = '<tr><td colspan="4">No projects found.</td></tr>';
+                document.getElementById('projectsTable').innerHTML = '<tr><td colspan="5">Inga projekt hittades.</td></tr>';
             }
         }
 
@@ -110,6 +111,7 @@
                     <td>${project.projectAddress}</td>
                     <td>${project.projectName}</td>
                     <td>${project.phoneNumber}</td>
+                    <td>${project.lastModified}</td> <!-- Visa "senast ändrad" -->
                 `;
                 row.addEventListener('click', () => {
                     // Spara hela projektet i localStorage
@@ -144,7 +146,8 @@
                 project.customerName.toLowerCase().includes(searchQuery) ||
                 project.projectAddress.toLowerCase().includes(searchQuery) ||
                 project.projectName.toLowerCase().includes(searchQuery) ||
-                project.phoneNumber.toLowerCase().includes(searchQuery)
+                project.phoneNumber.toLowerCase().includes(searchQuery) ||
+                project.lastModified.toLowerCase().includes(searchQuery) // Inkludera sökning i "senast ändrad"
             );
 
             displayProjects(filteredProjects);
@@ -164,23 +167,24 @@
 <body>
     <div class="container">
         <div class="sidebar">
-            <button onclick="createNewQuote()">Create New Quote</button>
+            <button onclick="createNewQuote()">Skapa Ny Offert</button>
         </div>
-        <h1>Saved Projects</h1>
+        <h1>Sparade Projekt</h1>
         <div class="search-sort-box">
-            <input type="text" id="searchBox" placeholder="Search projects..." oninput="searchProjects()">
+            <input type="text" id="searchBox" placeholder="Sök projekt..." oninput="searchProjects()">
         </div>
         <table>
             <thead>
                 <tr>
-                    <th onclick="sortTable('customerName')">Customer Name</th>
-                    <th onclick="sortTable('projectAddress')">Address</th>
-                    <th onclick="sortTable('projectName')">Project Name</th>
-                    <th onclick="sortTable('phoneNumber')">Phone Numbers</th>
+                    <th onclick="sortTable('customerName')">Kundnamn</th>
+                    <th onclick="sortTable('projectAddress')">Adress</th>
+                    <th onclick="sortTable('projectName')">Projektnamn</th>
+                    <th onclick="sortTable('phoneNumber')">Telefonnummer</th>
+                    <th onclick="sortTable('lastModified')">Senast ändrad</th> <!-- Kolumn för "senast ändrad" -->
                 </tr>
             </thead>
             <tbody id="projectsTable">
-                <!-- Projects will be dynamically added here -->
+                <!-- Projekt kommer att läggas till här dynamiskt -->
             </tbody>
         </table>
     </div>
