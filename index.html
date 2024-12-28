@@ -243,6 +243,27 @@
         #quotePage button:hover {
             background-color: #0056b3;
         }
+
+        /* Address Autocomplete Styles */
+        #suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            background-color: white;
+            width: calc(100% - 22px); /* Adjust width to match input */
+            z-index: 1000;
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
@@ -255,7 +276,7 @@
             apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
             authDomain: "configurator-e8f0b.firebaseapp.com",
             projectId: "configurator-e8f0b",
-            storageBucket: "configurator-e8f0b.firebasestorage.app",
+            storageBucket: "configurator-e8f0b.appspot.com",
             messagingSenderId: "680598761938",
             appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
         };
@@ -499,6 +520,59 @@
                 }
             });
         };
+    </script>
+    <!-- Address Autocomplete Script -->
+    <script>
+        const addressInput = document.getElementById('projectAddress');
+        const suggestionsDiv = document.createElement('div');
+        suggestionsDiv.id = 'suggestions';
+        addressInput.parentNode.appendChild(suggestionsDiv);
+
+        // Fetch address suggestions from Nominatim
+        async function fetchSuggestions(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+
+        // Display suggestions
+        function displaySuggestions(suggestions) {
+            suggestionsDiv.innerHTML = '';
+            if (suggestions.length > 0) {
+                suggestionsDiv.style.display = 'block';
+                suggestions.forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = suggestion.display_name;
+                    div.addEventListener('click', () => {
+                        addressInput.value = suggestion.display_name;
+                        suggestionsDiv.style.display = 'none';
+                    });
+                    suggestionsDiv.appendChild(div);
+                });
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        // Handle input event
+        addressInput.addEventListener('input', async () => {
+            const query = addressInput.value;
+            if (query.length > 2) { // Only search if the query is at least 3 characters long
+                const suggestions = await fetchSuggestions(query);
+                displaySuggestions(suggestions);
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (event) => {
+            if (event.target !== addressInput) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
     </script>
 </head>
 <body>
