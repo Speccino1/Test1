@@ -59,10 +59,23 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
@@ -91,12 +104,12 @@
                     customerName: projectData.customerName,
                     projectAddress: projectData.projectAddress,
                     phoneNumber: projectData.phoneNumber,
-                    lastModified: projectData.lastModified || "Okänd", // Lägg till "senast ändrad"
+                    lastModified: projectData.lastModified || "Okänd",
                     projectData,
                 }));
                 displayProjects(projectsArray);
             } else {
-                document.getElementById('projectsTable').innerHTML = '<tr><td colspan="5">Inga projekt hittades.</td></tr>';
+                document.getElementById('projectsTable').innerHTML = '<tr><td colspan="6">Inga projekt hittades.</td></tr>';
             }
         }
 
@@ -111,15 +124,36 @@
                     <td>${project.projectAddress}</td>
                     <td>${project.projectName}</td>
                     <td>${project.phoneNumber}</td>
-                    <td>${project.lastModified}</td> <!-- Visa "senast ändrad" -->
+                    <td>${project.lastModified}</td>
+                    <td><button class="delete-button" onclick="deleteProject('${project.projectName}')">Ta bort</button></td>
                 `;
-                row.addEventListener('click', () => {
-                    // Spara hela projektet i localStorage
-                    localStorage.setItem('currentProject', JSON.stringify(project.projectData));
-                    window.location.href = 'customer.html'; // Gå till customer.html först
+                row.addEventListener('click', (event) => {
+                    // Förhindra att raden klickas om användaren klickar på "Ta bort"-knappen
+                    if (event.target.tagName !== 'BUTTON') {
+                        localStorage.setItem('currentProject', JSON.stringify(project.projectData));
+                        window.location.href = 'customer.html';
+                    }
                 });
                 tableBody.appendChild(row);
             });
+        }
+
+        async function deleteProject(projectName) {
+            if (confirm(`Är du säker på att du vill ta bort projektet "${projectName}"?`)) {
+                const projectRef = doc(db, 'projects', username);
+                const projectDoc = await getDoc(projectRef);
+
+                if (projectDoc.exists()) {
+                    const projects = projectDoc.data();
+                    delete projects[projectName]; // Ta bort projektet från objektet
+
+                    // Uppdatera Firebase med det nya objektet (utan det borttagna projektet)
+                    await setDoc(projectRef, projects);
+
+                    // Uppdatera tabellen
+                    loadProjects(username);
+                }
+            }
         }
 
         function sortTable(column) {
@@ -147,7 +181,7 @@
                 project.projectAddress.toLowerCase().includes(searchQuery) ||
                 project.projectName.toLowerCase().includes(searchQuery) ||
                 project.phoneNumber.toLowerCase().includes(searchQuery) ||
-                project.lastModified.toLowerCase().includes(searchQuery) // Inkludera sökning i "senast ändrad"
+                project.lastModified.toLowerCase().includes(searchQuery)
             );
 
             displayProjects(filteredProjects);
@@ -162,6 +196,7 @@
         window.sortTable = sortTable;
         window.searchProjects = searchProjects;
         window.createNewQuote = createNewQuote;
+        window.deleteProject = deleteProject;
     </script>
 </head>
 <body>
@@ -180,7 +215,8 @@
                     <th onclick="sortTable('projectAddress')">Adress</th>
                     <th onclick="sortTable('projectName')">Projektnamn</th>
                     <th onclick="sortTable('phoneNumber')">Telefonnummer</th>
-                    <th onclick="sortTable('lastModified')">Senast ändrad</th> <!-- Kolumn för "senast ändrad" -->
+                    <th onclick="sortTable('lastModified')">Senast ändrad</th>
+                    <th>Åtgärd</th> <!-- Kolumn för "Ta bort"-knapp -->
                 </tr>
             </thead>
             <tbody id="projectsTable">
