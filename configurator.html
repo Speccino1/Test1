@@ -125,6 +125,7 @@
 
         // Ladda projektdata från localStorage
         function loadProject() {
+             console.log("loadProject() körs"); // Lägg till detta för att kontrollera
             const project = JSON.parse(localStorage.getItem('currentProject'));
             if (project) {
                 // Fyll i formuläret med sparade värden
