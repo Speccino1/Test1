@@ -336,12 +336,19 @@
             window.print();
         }
 
+        // Go to Overview Function
+        function goToOverview() {
+            document.getElementById('quotePage').classList.add('hidden');
+            document.getElementById('overviewPage').classList.remove('hidden');
+        }
+
         // Attach functions to the window object for HTML onclick
         window.login = login;
         window.generateQuote = generateQuote;
         window.createNewProject = createNewProject;
         window.printQuote = printQuote;
         window.goToConfigurator = goToConfigurator;
+        window.goToOverview = goToOverview;
     </script>
 </head>
 <body>
@@ -479,6 +486,7 @@
         </footer>
         <button onclick="printQuote()">Print Quote</button>
         <button onclick="createNewProject()">Create New Project</button>
+        <button onclick="goToOverview()">Projekt översikt</button>
     </div>
 </div>
 
