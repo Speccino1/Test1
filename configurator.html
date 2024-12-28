@@ -73,6 +73,56 @@
         const db = getFirestore(app);
         const username = "user123";
 
+        // Mappning av växelriktare till smartmätare
+        const inverterToSmartMeterMap = {
+            "Growatt-MOD-6KTL3-XH-BP": "Growatt Smart mätare",
+            "Growatt-MOD-8KTL3-XH-BP": "Growatt Smart mätare",
+            "Growatt-MOD-10KTL3-XH-BP": "Growatt Smart mätare",
+            "Growatt-MID-12KTL3-XH": "Growatt Smart mätare",
+            "Growatt-MID-15KTL3-XH": "Growatt Smart mätare",
+            "Growatt-MID-17KTL3-XH": "Growatt Smart mätare",
+            "Growatt-MID-20KTL3-XH": "Growatt Smart mätare",
+            "Growatt-MID-25KTL3-XH": "Growatt Smart mätare",
+            "Growatt-MID-30KTL3-XH": "Growatt Smart mätare",
+            "Huawei-3KTL-M1": "Huawei EMMA",
+            "Huawei-4KTL-M1": "Huawei EMMA",
+            "Huawei-5KTL-M1": "Huawei EMMA",
+            "Huawei-6KTL-M1": "Huawei EMMA",
+            "Huawei-8KTL-M1": "Huawei EMMA",
+            "Huawei-10KTL-M1": "Huawei EMMA",
+            "Huawei-12KTL-MB0": "Huawei EMMA",
+            "Huawei-15KTL-MB0": "Huawei EMMA",
+            "Huawei-17KTL-MB0": "Huawei EMMA",
+            "Huawei-20KTL-MB0": "Huawei EMMA",
+            "Huawei-25KTL-MB0": "Huawei EMMA",
+            "Huawei-30KTL-M3": "Huawei EMMA",
+            "Huawei-36KTL-M3": "Huawei EMMA",
+            "Huawei-40KTL-M3": "Huawei EMMA",
+            "Huawei-50KTL-M3": "Huawei EMMA",
+            "Huawei-60KTL-M0": "Huawei EMMA",
+            "Huawei-100KTL-M2": "Huawei EMMA",
+            "Fronius-6": "Fronius Smart Meter 63A-3",
+            "Fronius-8": "Fronius Smart Meter 63A-3",
+            "Fronius-10": "Fronius Smart Meter 63A-3",
+            "SigenStor-6.0kW": "Sigen Smart mätare",
+            "SigenStor-8.0kW": "Sigen Smart mätare",
+            "SigenStor-10.0kW": "Sigen Smart mätare",
+            "SigenStor-12.0kW": "Sigen Smart mätare",
+            "SigenStor-15.0kW": "Sigen Smart mätare",
+            "SigenStor-17.0kW": "Sigen Smart mätare",
+            "SigenStor-20.0kW": "Sigen Smart mätare",
+            "SigenStor-25.0kW": "Sigen Smart mätare",
+            "Solis S6-EH3P6K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P8K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P10K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P12K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P15K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P20K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P30K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P40K-H-EU Hybrid": "Solis Smart mätare",
+            "Solis S6-EH3P50K-H-EU Hybrid": "Solis Smart mätare",
+        };
+
         // Ladda projektdata från localStorage
         function loadProject() {
             const project = JSON.parse(localStorage.getItem('currentProject'));
@@ -177,6 +227,25 @@
 <body>
     <div class="container">
         <h1>Solenergisystem Konfigurator</h1>
+
+        <!-- Kundinformation -->
+        <div class="system">
+            <h2>Kundinformation</h2>
+            <label for="projectName">Projektnamn:</label>
+            <input type="text" id="projectName" readonly>
+
+            <label for="customerName">Kundnamn:</label>
+            <input type="text" id="customerName" readonly>
+
+            <label for="phoneNumber">Telefonnummer:</label>
+            <input type="text" id="phoneNumber" readonly>
+
+            <label for="emailAddress">E-postadress:</label>
+            <input type="email" id="emailAddress" readonly>
+
+            <label for="projectAddress">Adress:</label>
+            <input type="text" id="projectAddress" readonly>
+        </div>
 
         <!-- Solinstallation -->
         <div class="system">
