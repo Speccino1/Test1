@@ -78,7 +78,6 @@
             <p><strong>Batterimärke:</strong> <span id="quoteBatteryBrand"></span></p>
             <p><strong>Antal batterier:</strong> <span id="quoteBatteryAmount"></span></p>
             <p><strong>Total batterikapacitet:</strong> <span id="quoteBatterySize"></span> kWh</p>
-            <p><strong>Total batterikostnad:</strong> <span id="quoteBatteryCost"></span> SEK</p>
 
             <!-- Smartmätare -->
             <h2>📊 Smartmätare</h2>
@@ -90,9 +89,8 @@
         </div>
         <div class="total-price">
             <h2>💰 Totalt Pris</h2>
-            <p><strong>Pris exklusive moms:</strong> <span id="quoteTotalExclVAT"></span> SEK</p>
-            <p><strong>Pris inklusive vinstmarginal (30%):</strong> <span id="quoteTotalWithProfit"></span> SEK</p>
-            <p><strong>Pris inklusive moms (25%):</strong> <span id="quoteTotalInclVAT"></span> SEK</p>
+            <p><strong>Pris inklusive vinstpåslag (exklusive moms):</strong> <span id="quoteTotalWithProfit"></span> SEK</p>
+            <p><strong>Pris inklusive moms:</strong> <span id="quoteTotalInclVAT"></span> SEK</p>
         </div>
         <footer>
             <p>📞 Kontakta oss på <strong>123-456-7890</strong> för frågor.</p>
@@ -123,7 +121,6 @@
             document.getElementById('quoteBatteryBrand').textContent = project.batteryBrand;
             document.getElementById('quoteBatteryAmount').textContent = project.batteryAmount;
             document.getElementById('quoteBatterySize').textContent = project.batterySize.toFixed(2);
-            document.getElementById('quoteBatteryCost').textContent = project.batteryCost.toFixed(2);
 
             // Visa smartmätardetaljer
             document.getElementById('quoteSmartMeterBrand').textContent = project.smartMeterBrand;
@@ -132,7 +129,6 @@
             document.getElementById('quoteChargerType').textContent = project.chargerType;
 
             // Visa priser
-            document.getElementById('quoteTotalExclVAT').textContent = project.totalExclVAT.toFixed(2);
             document.getElementById('quoteTotalWithProfit').textContent = project.totalWithProfit.toFixed(2);
             document.getElementById('quoteTotalInclVAT').textContent = project.totalInclVAT.toFixed(2);
         } else {
