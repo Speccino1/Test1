@@ -71,7 +71,6 @@
         function loadProject() {
             const project = JSON.parse(localStorage.getItem('currentProject'));
             if (project) {
-                // Prefill the form fields with the project data
                 document.getElementById('projectName').value = project.projectName || '';
                 document.getElementById('customerName').value = project.customerName || '';
                 document.getElementById('phoneNumber').value = project.phoneNumber || '';
@@ -98,6 +97,7 @@
             const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
             const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
             const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
+            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
             const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
             const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
@@ -105,7 +105,6 @@
 
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
-            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
             const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
             const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
@@ -122,6 +121,7 @@
                 solarPanelBrand,
                 solarPanelAmount,
                 inverterBrand,
+                inverterBrandCost,
                 batteryBrand,
                 batterySize,
                 smartMeterBrand,
@@ -184,11 +184,66 @@
             </select>
             <label for="solarPanelAmount">Antal solpaneler:</label>
             <input type="number" id="solarPanelAmount" placeholder="Ange antal paneler" min="0">
-            <label for="inverterBrand">Omriktarmärke:</label>
+            <label for="inverterBrand">Växelriktare:</label>
             <select id="inverterBrand">
-                <option value="0">Välj omriktarmärke</option>
-                <option value="3000">Märke A</option>
-                <option value="4000">Märke B</option>
+                <option value="0">Välj växelriktare</option>
+                <!-- Growatt -->
+                <option value="11287">Growatt-MOD-6KTL3-XH-BP</option>
+                <option value="12862">Growatt-MOD-8KTL3-XH-BP</option>
+                <option value="13606">Growatt-MOD-10KTL3-XH-BP</option>
+                <option value="14305">Growatt-MID-12KTL3-XH</option>
+                <option value="15066">Growatt-MID-15KTL3-XH</option>
+                <option value="16639">Growatt-MID-17KTL3-XH</option>
+                <option value="17665">Growatt-MID-20KTL3-XH</option>
+                <option value="19538">Growatt-MID-25KTL3-XH</option>
+                <option value="21171">Growatt-MID-30KTL3-XH</option>
+                <!-- Solis -->
+                <option value="14591">Solis S6-EH3P6K-H-EU Hybrid</option>
+                <option value="15225">Solis S6-EH3P8K-H-EU Hybrid</option>
+                <option value="15859">Solis S6-EH3P10K-H-EU Hybrid</option>
+                <option value="17128">Solis S6-EH3P12K-H-EU Hybrid</option>
+                <option value="17762">Solis S6-EH3P15K-H-EU Hybrid</option>
+                <option value="19031">Solis S6-EH3P20K-H-EU Hybrid</option>
+                <option value="38062">Solis S6-EH3P30K-H-EU Hybrid</option>
+                <option value="45675">Solis S6-EH3P40K-H-EU Hybrid</option>
+                <option value="50749">Solis S6-EH3P50K-H-EU Hybrid</option>
+                <!-- Sungrow -->
+                <option value="17218">Sungrow-6kW</option>
+                <option value="16982">Sungrow-8 kW</option>
+                <option value="19244">Sungrow-10kW</option>
+                <option value="27352">Sungrow-15kW</option>
+                <option value="33020">Sungrow-25kW</option>
+                <!-- Huawei -->
+                <option value="7500">Huawei-3KTL-M1</option>
+                <option value="9500">Huawei-4KTL-M1</option>
+                <option value="8784">Huawei-5KTL-M1</option>
+                <option value="10689">Huawei-6KTL-M1</option>
+                <option value="11688">Huawei-8KTL-M1</option>
+                <option value="12144">Huawei-10KTL-M1</option>
+                <option value="20321">Huawei-12KTL-MB0</option>
+                <option value="22954">Huawei-15KTL-MB0</option>
+                <option value="23426">Huawei-17KTL-MB0</option>
+                <option value="24748">Huawei-20KTL-MB0</option>
+                <option value="25323">Huawei-25KTL-MB0</option>
+                <option value="22911">Huawei-30KTL-M3</option>
+                <option value="25167">Huawei-36KTL-M3</option>
+                <option value="27158">Huawei-40KTL-M3</option>
+                <option value="31740">Huawei-50KTL-M3</option>
+                <option value="34888.35">Huawei-60KTL-M0</option>
+                <option value="49596.87">Huawei-100KTL-M2</option>
+                <!-- Fronius -->
+                <option value="25168">Fronius-6</option>
+                <option value="27750">Fronius-8</option>
+                <option value="28992">Fronius-10</option>
+                <!-- SigEnergy -->
+                <option value="19637">SigenStor-6.0kW</option>
+                <option value="20313">SigenStor-8.0kW</option>
+                <option value="20072">SigenStor-10.0kW</option>
+                <option value="23743">SigenStor-12.0kW</option>
+                <option value="26572">SigenStor-15.0kW</option>
+                <option value="28159">SigenStor-17.0kW</option>
+                <option value="29635">SigenStor-20.0kW</option>
+                <option value="34548">SigenStor-25.0kW</option>
             </select>
         </div>
 
