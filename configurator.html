@@ -51,7 +51,6 @@
             background-color: #218838;
         }
     </style>
-    <!-- Add Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
@@ -72,19 +71,20 @@
         function loadProject() {
             const project = JSON.parse(localStorage.getItem('currentProject'));
             if (project) {
-                document.getElementById('projectName').value = project.projectName;
-                document.getElementById('customerName').value = project.customerName;
-                document.getElementById('phoneNumber').value = project.phoneNumber;
-                document.getElementById('emailAddress').value = project.emailAddress;
-                document.getElementById('projectAddress').value = project.projectAddress;
-                document.getElementById('roofType').value = project.roofType;
-                document.getElementById('solarPanelBrand').value = project.solarPanelBrand;
-                document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
-                document.getElementById('inverterBrand').value = project.inverterBrand;
-                document.getElementById('batteryBrand').value = project.batteryBrand;
-                document.getElementById('batterySize').value = project.batterySize;
-                document.getElementById('smartMeterBrand').value = project.smartMeterBrand;
-                document.getElementById('chargerType').value = project.chargerType;
+                // Prefill the form fields with the project data
+                document.getElementById('projectName').value = project.projectName || '';
+                document.getElementById('customerName').value = project.customerName || '';
+                document.getElementById('phoneNumber').value = project.phoneNumber || '';
+                document.getElementById('emailAddress').value = project.emailAddress || '';
+                document.getElementById('projectAddress').value = project.projectAddress || '';
+                document.getElementById('roofType').value = project.roofType || '';
+                document.getElementById('solarPanelBrand').value = project.solarPanelBrand || '';
+                document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
+                document.getElementById('inverterBrand').value = project.inverterBrand || '';
+                document.getElementById('batteryBrand').value = project.batteryBrand || '';
+                document.getElementById('batterySize').value = project.batterySize || '';
+                document.getElementById('smartMeterBrand').value = project.smartMeterBrand || '';
+                document.getElementById('chargerType').value = project.chargerType || '';
             }
         }
 
