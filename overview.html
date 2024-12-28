@@ -112,6 +112,7 @@
                     <td>${project.phoneNumber}</td>
                 `;
                 row.addEventListener('click', () => {
+                    // Spara hela projektet i localStorage
                     localStorage.setItem('currentProject', JSON.stringify(project.projectData));
                     window.location.href = 'customer.html'; // Gå till customer.html först
                 });
