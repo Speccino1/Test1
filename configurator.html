@@ -78,13 +78,13 @@
                 document.getElementById('emailAddress').value = project.emailAddress;
                 document.getElementById('projectAddress').value = project.projectAddress;
                 document.getElementById('roofType').value = project.roofType;
-                document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
+                document.getElementById('solarPanelBrand').value = project.solarPanelBrand;
                 document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
-                document.getElementById('inverterBrand').value = project.inverterBrand.includes('Märke A') ? '3000' : '4000';
-                document.getElementById('batteryBrand').value = project.batteryBrand.includes('Märke P') ? '700' : '800';
+                document.getElementById('inverterBrand').value = project.inverterBrand;
+                document.getElementById('batteryBrand').value = project.batteryBrand;
                 document.getElementById('batterySize').value = project.batterySize;
-                document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Märke M') ? '500' : '800';
-                document.getElementById('chargerType').value = project.chargerType.includes('Typ 1') ? '1000' : '1500';
+                document.getElementById('smartMeterBrand').value = project.smartMeterBrand;
+                document.getElementById('chargerType').value = project.chargerType;
             }
         }
 
@@ -166,29 +166,29 @@
             <label for="roofType">Taktyp:</label>
             <select id="roofType">
                 <option value="0">Välj taktyp</option>
-                <option value="5000">Plåttak - 5000 SEK</option>
-                <option value="6000">Falsat plåttak - 6000 SEK</option>
-                <option value="7000">Betong / Tegeltak - 7000 SEK</option>
-                <option value="8000">Papptak - 8000 SEK</option>
+                <option value="5000">Plåttak</option>
+                <option value="6000">Falsat plåttak</option>
+                <option value="7000">Betong / Tegeltak</option>
+                <option value="8000">Papptak</option>
             </select>
             <label for="solarPanelBrand">Solpanelsmärke:</label>
             <select id="solarPanelBrand">
                 <option value="0">Välj solpanelsmärke</option>
-                <option value="900">DMEGC helsvart 450W glas/glas (Art.nr: DM450M10RT-B54HBB) - 900 SEK</option>
-                <option value="940">DMEGC helsvart 500W (Art.nr: DM500M10RT-60HBB) - 940 SEK</option>
-                <option value="1000">AIKO 455W helsvart Glas/glas (Art.nr: A455-MAH54Db) - 1000 SEK</option>
-                <option value="900">AIKO 455W helsvart (Art.nr: AIKO-A-MAH54Mb-455W) - 900 SEK</option>
-                <option value="900">Longi 440W Svart ram (Art.nr: LR5-54HTH-440M) - 900 SEK</option>
-                <option value="900">Longi 505W Helsvart (Art.nr: Longi LR7) - 900 SEK</option>
-                <option value="1030">Longi 530W Svart ram (Art.nr: LR5-66HTH-530M) - 1030 SEK</option>
+                <option value="900">DMEGC helsvart 450W glas/glas (Art.nr: DM450M10RT-B54HBB)</option>
+                <option value="940">DMEGC helsvart 500W (Art.nr: DM500M10RT-60HBB)</option>
+                <option value="1000">AIKO 455W helsvart Glas/glas (Art.nr: A455-MAH54Db)</option>
+                <option value="900">AIKO 455W helsvart (Art.nr: AIKO-A-MAH54Mb-455W)</option>
+                <option value="900">Longi 440W Svart ram (Art.nr: LR5-54HTH-440M)</option>
+                <option value="900">Longi 505W Helsvart (Art.nr: Longi LR7)</option>
+                <option value="1030">Longi 530W Svart ram (Art.nr: LR5-66HTH-530M)</option>
             </select>
             <label for="solarPanelAmount">Antal solpaneler:</label>
             <input type="number" id="solarPanelAmount" placeholder="Ange antal paneler" min="0">
             <label for="inverterBrand">Omriktarmärke:</label>
             <select id="inverterBrand">
                 <option value="0">Välj omriktarmärke</option>
-                <option value="3000">Märke A - 3000 SEK</option>
-                <option value="4000">Märke B - 4000 SEK</option>
+                <option value="3000">Märke A</option>
+                <option value="4000">Märke B</option>
             </select>
         </div>
 
@@ -198,16 +198,16 @@
             <label for="batteryBrand">Batterimärke:</label>
             <select id="batteryBrand">
                 <option value="0">Välj batterimärke</option>
-                <option value="700">Märke P - 700 SEK per kWh</option>
-                <option value="800">Märke Q - 800 SEK per kWh</option>
+                <option value="700">Märke P</option>
+                <option value="800">Märke Q</option>
             </select>
             <label for="batterySize">Batteristorlek (kWh):</label>
             <input type="number" id="batterySize" placeholder="Ange batteristorlek" min="0">
             <label for="smartMeterBrand">Smartmätarmärke:</label>
             <select id="smartMeterBrand">
                 <option value="0">Välj smartmätarmärke</option>
-                <option value="500">Märke M - 500 SEK</option>
-                <option value="800">Märke N - 800 SEK</option>
+                <option value="500">Märke M</option>
+                <option value="800">Märke N</option>
             </select>
         </div>
 
@@ -217,8 +217,8 @@
             <label for="chargerType">Laddartyp:</label>
             <select id="chargerType">
                 <option value="0">Välj laddartyp</option>
-                <option value="1000">Typ 1 - 1000 SEK</option>
-                <option value="1500">Typ 2 - 1500 SEK</option>
+                <option value="1000">Typ 1</option>
+                <option value="1500">Typ 2</option>
             </select>
         </div>
 
