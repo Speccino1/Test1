@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Configurator - Quote</title>
     <style>
+        /* Add your old CSS here */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -52,16 +53,40 @@
     <div class="container">
         <h1>Your Solar System Quote</h1>
         <div class="quote-details">
-            <p><strong>Project Name:</strong> <span id="quoteProjectName">Project 1</span></p>
-            <p><strong>Address:</strong> <span id="quoteProjectAddress">Address 1</span></p>
+            <p><strong>Project Name:</strong> <span id="quoteProjectName"></span></p>
+            <p><strong>Address:</strong> <span id="quoteProjectAddress"></span></p>
+            <p><strong>Roof Type:</strong> <span id="quoteRoofType"></span></p>
+            <p><strong>Solar Panel Brand:</strong> <span id="quoteSolarPanelBrand"></span></p>
+            <p><strong>Number of Panels:</strong> <span id="quoteSolarPanelAmount"></span></p>
+            <p><strong>Inverter Brand:</strong> <span id="quoteInverterBrand"></span></p>
+            <p><strong>Battery Brand:</strong> <span id="quoteBatteryBrand"></span></p>
+            <p><strong>Battery Size:</strong> <span id="quoteBatterySize"></span> kWh</p>
+            <p><strong>Smart Meter Brand:</strong> <span id="quoteSmartMeterBrand"></span></p>
+            <p><strong>Charger Type:</strong> <span id="quoteChargerType"></span></p>
         </div>
         <div class="total-price">
             <h2>💰 Total Price</h2>
-            <p class="price">5000 SEK</p>
+            <p class="price"><span id="quoteTotalPrice"></span> SEK</p>
         </div>
         <button onclick="window.print()">Print Quote</button>
         <button onclick="window.location.href='configurator.html'">Create New Project</button>
         <button onclick="window.location.href='overview.html'">Return to Overview</button>
     </div>
+    <script>
+        const project = JSON.parse(localStorage.getItem('currentQuote'));
+        if (project) {
+            document.getElementById('quoteProjectName').textContent = project.projectName;
+            document.getElementById('quoteProjectAddress').textContent = project.projectAddress;
+            document.getElementById('quoteRoofType').textContent = project.roofType;
+            document.getElementById('quoteSolarPanelBrand').textContent = project.solarPanelBrand;
+            document.getElementById('quoteSolarPanelAmount').textContent = project.solarPanelAmount;
+            document.getElementById('quoteInverterBrand').textContent = project.inverterBrand;
+            document.getElementById('quoteBatteryBrand').textContent = project.batteryBrand;
+            document.getElementById('quoteBatterySize').textContent = project.batterySize;
+            document.getElementById('quoteSmartMeterBrand').textContent = project.smartMeterBrand;
+            document.getElementById('quoteChargerType').textContent = project.chargerType;
+            document.getElementById('quoteTotalPrice').textContent = project.totalPrice.toFixed(2);
+        }
+    </script>
 </body>
 </html>
