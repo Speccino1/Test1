@@ -92,6 +92,22 @@
             }
         }
 
+        function clearForm() {
+            document.getElementById('projectName').value = '';
+            document.getElementById('customerName').value = '';
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('emailAddress').value = '';
+            document.getElementById('projectAddress').value = '';
+            document.getElementById('roofType').selectedIndex = 0;
+            document.getElementById('solarPanelBrand').selectedIndex = 0;
+            document.getElementById('solarPanelAmount').value = '';
+            document.getElementById('inverterBrand').selectedIndex = 0;
+            document.getElementById('batteryBrand').selectedIndex = 0;
+            document.getElementById('batterySize').value = '';
+            document.getElementById('smartMeterBrand').selectedIndex = 0;
+            document.getElementById('chargerType').selectedIndex = 0;
+        }
+
         async function generateQuote() {
             const projectName = document.getElementById('projectName').value;
             const customerName = document.getElementById('customerName').value;
@@ -139,8 +155,15 @@
             window.location.href = 'quote.html';
         }
 
-        window.onload = loadProject;
+        window.onload = () => {
+            // Rensa fält om det inte finns något sparat projekt
+            if (!localStorage.getItem('currentProject')) {
+                clearForm();
+            }
+            loadProject();
+        };
         window.generateQuote = generateQuote;
+        window.clearForm = clearForm;
     </script>
 </head>
 <body>
