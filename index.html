@@ -5,154 +5,209 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Configurator</title>
     <style>
-        /* Global Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        h1, h2 {
-            color: #2c3e50;
-        }
-
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-        }
-
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .success-message {
-            color: #27ae60;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .sidebar {
-            width: 200px;
-            float: left;
-            margin-right: 20px;
-        }
-
-        .overview {
-            overflow: hidden;
-        }
-
-        .quote-page {
-            text-align: center;
-        }
-
-        .quote-details {
-            text-align: left;
-            margin: 20px 0;
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        .total-price {
-            background-color: #ecf0f1;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-
-        .price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #27ae60;
-        }
-
-        footer {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        /* Add the CSS styles from earlier here */
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
-        // (Keep the existing Firebase and JavaScript logic here)
+        // Import the functions you need from the Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
+            authDomain: "configurator-e8f0b.firebaseapp.com",
+            projectId: "configurator-e8f0b",
+            storageBucket: "configurator-e8f0b.firebasestorage.app",
+            messagingSenderId: "680598761938",
+            appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Initialize Firestore
+        const db = getFirestore(app);
+
+        // Hardcoded username for demonstration
+        const username = "user123";
+
+        // Load Projects Function
+        async function loadProjects() {
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = ''; // Clear the list
+
+            const projectRef = doc(db, 'projects', username);
+            const projectDoc = await getDoc(projectRef);
+
+            if (projectDoc.exists()) {
+                const projects = projectDoc.data();
+                for (const [projectName, projectData] of Object.entries(projects)) {
+                    const li = document.createElement('li');
+                    li.textContent = `${projectName} - ${projectData.projectAddress}`;
+                    li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
+                    projectsList.appendChild(li);
+                }
+            } else {
+                projectsList.innerHTML = '<li>No projects found.</li>';
+            }
+        }
+
+        // Load Project into Configurator
+        function loadProjectIntoConfigurator(project) {
+            document.getElementById('projectName').value = project.projectName;
+            document.getElementById('projectAddress').value = project.projectAddress;
+            document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
+            document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
+            document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
+            document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
+            document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
+            document.getElementById('batterySize').value = project.batterySize;
+            document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
+            document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
+
+            // Hide overview page and show configurator page
+            document.getElementById('overviewPage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
+        }
+
+        // Go to Configurator for New Quote
+        function goToConfigurator() {
+            // Hide overview page and show configurator page
+            document.getElementById('overviewPage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
+        }
+
+        // Generate Quote Function
+        async function generateQuote() {
+            // Get values from Configurator
+            const projectName = document.getElementById('projectName').value;
+            const projectAddress = document.getElementById('projectAddress').value;
+            const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
+            const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
+            const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
+            const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
+            const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
+            const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
+            const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
+            const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
+
+            // Calculate total price
+            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
+            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
+            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
+            const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
+            const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
+            const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
+
+            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
+
+            // Display values on the quote page
+            document.getElementById('quoteProjectName').textContent = projectName;
+            document.getElementById('quoteProjectAddress').textContent = projectAddress;
+            document.getElementById('quoteRoofType').textContent = roofType;
+            document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
+            document.getElementById('quoteSolarPanelAmount').textContent = solarPanelAmount;
+            document.getElementById('quoteInverterBrand').textContent = inverterBrand;
+            document.getElementById('quoteBatteryBrand').textContent = batteryBrand;
+            document.getElementById('quoteBatterySize').textContent = batterySize;
+            document.getElementById('quoteSmartMeterBrand').textContent = smartMeterBrand;
+            document.getElementById('quoteChargerType').textContent = chargerType;
+            document.getElementById('quoteTotalPrice').textContent = totalPrice.toFixed(2);
+
+            // Save project to Firestore
+            const project = {
+                projectName,
+                projectAddress,
+                roofType,
+                solarPanelBrand,
+                solarPanelAmount,
+                inverterBrand,
+                batteryBrand,
+                batterySize,
+                smartMeterBrand,
+                chargerType,
+                totalPrice,
+            };
+            await saveProject(project);
+
+            // Reload projects list
+            loadProjects();
+
+            // Hide configurator page and show quote page
+            document.getElementById('configuratorPage').classList.add('hidden');
+            document.getElementById('quotePage').classList.remove('hidden');
+        }
+
+        // Save Project Function
+        async function saveProject(project) {
+            const projectRef = doc(db, 'projects', username); // Use hardcoded username as the document ID
+            await setDoc(projectRef, { [project.projectName]: project }, { merge: true });
+        }
+
+        // Create New Project Function
+        function createNewProject() {
+            document.getElementById('quotePage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
+        }
+
+        // Print Quote Function
+        function printQuote() {
+            window.print();
+        }
+
+        // Go to Overview Function
+        function goToOverview() {
+            document.getElementById('quotePage').classList.add('hidden');
+            document.getElementById('overviewPage').classList.remove('hidden');
+        }
+
+        // Filter Projects Function
+        async function filterProjects() {
+            const filterProjectName = document.getElementById('filterProjectName').value.toLowerCase();
+            const filterAddress = document.getElementById('filterAddress').value.toLowerCase();
+
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = ''; // Clear the list
+
+            const projectRef = doc(db, 'projects', username);
+            const projectDoc = await getDoc(projectRef);
+
+            if (projectDoc.exists()) {
+                const projects = projectDoc.data();
+                for (const [projectName, projectData] of Object.entries(projects)) {
+                    // Check if the project matches the filter criteria
+                    if (
+                        projectName.toLowerCase().includes(filterProjectName) &&
+                        projectData.projectAddress.toLowerCase().includes(filterAddress)
+                    ) {
+                        const li = document.createElement('li');
+                        li.textContent = `${projectName} - ${projectData.projectAddress}`;
+                        li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
+                        projectsList.appendChild(li);
+                    }
+                }
+            } else {
+                projectsList.innerHTML = '<li>No projects found.</li>';
+            }
+        }
+
+        // Load projects when the page loads
+        window.onload = loadProjects;
+
+        // Attach functions to the window object for HTML onclick
+        window.generateQuote = generateQuote;
+        window.createNewProject = createNewProject;
+        window.printQuote = printQuote;
+        window.goToConfigurator = goToConfigurator;
+        window.goToOverview = goToOverview;
+        window.filterProjects = filterProjects;
     </script>
 </head>
 <body>
 
-<!-- Login Page (Hidden by Default) -->
-<div class="container hidden" id="loginPage">
-    <h1>Welcome to Solar System Configurator</h1>
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="Enter your username">
-    <label for="password">Password:</label>
-    <input type="password" id="password" placeholder="Enter your password">
-    <button onclick="login()">Login</button>
-    <div id="errorMessage" class="error-message hidden">Invalid username or password.</div>
-</div>
-
-<!-- Overview Page (Hidden by Default) -->
-<div class="container hidden" id="overviewPage">
+<!-- Overview Page (Visible by Default) -->
+<div class="container" id="overviewPage">
     <div class="sidebar">
         <button onclick="goToConfigurator()">Create New Quote</button>
     </div>
