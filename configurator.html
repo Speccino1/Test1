@@ -37,18 +37,23 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        button {
-            background-color: #28a745;
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .navigation-buttons button {
+            background-color: #007bff;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
-        button:hover {
-            background-color: #218838;
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script type="module">
@@ -277,7 +282,11 @@
             </select>
         </div>
 
-        <button onclick="generateQuote()">Generera Offer</button>
+        <!-- Knappar för navigering -->
+        <div class="navigation-buttons">
+            <button onclick="window.location.href='overview.html'">Gå till Projektöversikt</button>
+            <button onclick="generateQuote()">Generera Offer</button>
+        </div>
     </div>
 </body>
 </html>
