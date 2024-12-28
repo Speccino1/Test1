@@ -138,23 +138,29 @@
             });
         }
 
-        async function deleteProject(projectName) {
-            if (confirm(`Är du säker på att du vill ta bort projektet "${projectName}"?`)) {
-                const projectRef = doc(db, 'projects', username);
-                const projectDoc = await getDoc(projectRef);
+       async function deleteProject(projectName) {
+    if (confirm(`Är du säker på att du vill ta bort projektet "${projectName}"?`)) {
+        const projectRef = doc(db, 'projects', username);
+        const projectDoc = await getDoc(projectRef);
 
-                if (projectDoc.exists()) {
-                    const projects = projectDoc.data();
-                    delete projects[projectName]; // Ta bort projektet från objektet
+        if (projectDoc.exists()) {
+            const projects = projectDoc.data();
+            if (projects[projectName]) {
+                delete projects[projectName]; // Ta bort projektet från objektet
 
-                    // Uppdatera Firebase med det nya objektet (utan det borttagna projektet)
-                    await setDoc(projectRef, projects);
+                // Uppdatera Firebase med det nya objektet (utan det borttagna projektet)
+                await setDoc(projectRef, projects);
 
-                    // Uppdatera tabellen
-                    loadProjects(username);
-                }
+                // Uppdatera tabellen
+                loadProjects(username);
+            } else {
+                alert(`Projektet "${projectName}" hittades inte.`);
             }
+        } else {
+            alert("Inga projekt hittades.");
         }
+    }
+}
 
         function sortTable(column) {
             if (sortState.column === column) {
