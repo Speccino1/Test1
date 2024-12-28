@@ -46,6 +46,12 @@
         button:hover {
             background-color: #0056b3;
         }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -65,7 +71,7 @@
             <p><strong>Taktyp:</strong> <span id="quoteRoofType"></span></p>
             <p><strong>Solpanelsmärke:</strong> <span id="quoteSolarPanelBrand"></span></p>
             <p><strong>Antal solpaneler:</strong> <span id="quoteSolarPanelAmount"></span></p>
-            <p><strong>Omriktarmärke:</strong> <span id="quoteInverterBrand"></span></p>
+            <p><strong>Växelriktare:</strong> <span id="quoteInverterBrand"></span></p>
 
             <!-- Batterisystem -->
             <h2>🔋 Batteri</h2>
@@ -91,32 +97,38 @@
         <button onclick="window.location.href='overview.html'">Projektöversikt</button>
     </div>
     <script>
-        // Load the project data from localStorage
+        // Ladda projektdata från localStorage
         const project = JSON.parse(localStorage.getItem('currentQuote'));
         if (project) {
-            // Display customer details
+            // Visa kunduppgifter
             document.getElementById('quoteProjectName').textContent = project.projectName;
             document.getElementById('quoteCustomerName').textContent = project.customerName;
             document.getElementById('quotePhoneNumber').textContent = project.phoneNumber;
             document.getElementById('quoteEmailAddress').textContent = project.emailAddress;
             document.getElementById('quoteProjectAddress').textContent = project.projectAddress;
 
-            // Display solar installation details
+            // Visa solinstallationsdetaljer
             document.getElementById('quoteRoofType').textContent = project.roofType;
             document.getElementById('quoteSolarPanelBrand').textContent = project.solarPanelBrand;
             document.getElementById('quoteSolarPanelAmount').textContent = project.solarPanelAmount;
             document.getElementById('quoteInverterBrand').textContent = project.inverterBrand;
 
-            // Display battery details
+            // Visa batteridetaljer
             document.getElementById('quoteBatteryBrand').textContent = project.batteryBrand;
             document.getElementById('quoteBatterySize').textContent = project.batterySize;
             document.getElementById('quoteSmartMeterBrand').textContent = project.smartMeterBrand;
 
-            // Display charger details
+            // Visa laddardetaljer
             document.getElementById('quoteChargerType').textContent = project.chargerType;
 
-            // Display total price
+            // Visa totalpris
             document.getElementById('quoteTotalPrice').textContent = project.totalPrice.toFixed(2);
+        } else {
+            // Om ingen projektdata finns, visa ett meddelande
+            document.querySelector('.container').innerHTML = `
+                <h1>Ingen offert hittad</h1>
+                <p>Du har inte skapat någon offert ännu. <a href="configurator.html">Skapa en offert här</a>.</p>
+            `;
         }
     </script>
 </body>
