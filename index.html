@@ -138,6 +138,30 @@
         .quote-page footer p {
             margin: 5px 0;
         }
+        .overview {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .overview h1 {
+            color: #007BFF;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .projects-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .projects-list li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .projects-list li:hover {
+            background-color: #f9f9f9;
+        }
         @media print {
             body {
                 margin: 0;
@@ -176,7 +200,7 @@
     <script type="module">
         // Import the functions you need from the Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -204,13 +228,60 @@
             const password = document.getElementById('password').value;
 
             if (username === validUsername && password === validPassword) {
-                // Hide login page and show configurator page
+                // Hide login page and show overview page
                 document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('configuratorPage').classList.remove('hidden');
+                document.getElementById('overviewPage').classList.remove('hidden');
+                // Load saved projects
+                loadProjects(username);
             } else {
                 // Show error message
                 document.getElementById('errorMessage').classList.remove('hidden');
             }
+        }
+
+        // Load Projects Function
+        async function loadProjects(username) {
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = ''; // Clear the list
+
+            const projectRef = doc(db, 'projects', username);
+            const projectDoc = await getDoc(projectRef);
+
+            if (projectDoc.exists()) {
+                const projects = projectDoc.data();
+                for (const [projectName, projectData] of Object.entries(projects)) {
+                    const li = document.createElement('li');
+                    li.textContent = projectName;
+                    li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
+                    projectsList.appendChild(li);
+                }
+            } else {
+                projectsList.innerHTML = '<li>No projects found.</li>';
+            }
+        }
+
+        // Load Project into Configurator
+        function loadProjectIntoConfigurator(project) {
+            document.getElementById('projectName').value = project.projectName;
+            document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
+            document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
+            document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
+            document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
+            document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
+            document.getElementById('batterySize').value = project.batterySize;
+            document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
+            document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
+
+            // Hide overview page and show configurator page
+            document.getElementById('overviewPage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
+        }
+
+        // Go to Configurator for New Quote
+        function goToConfigurator() {
+            // Hide overview page and show configurator page
+            document.getElementById('overviewPage').classList.add('hidden');
+            document.getElementById('configuratorPage').classList.remove('hidden');
         }
 
         // Generate Quote Function
@@ -263,6 +334,9 @@
             };
             await saveProject(project);
 
+            // Reload projects list
+            loadProjects(validUsername);
+
             // Hide configurator page and show quote page
             document.getElementById('configuratorPage').classList.add('hidden');
             document.getElementById('quotePage').classList.remove('hidden');
@@ -291,6 +365,7 @@
         window.generateQuote = generateQuote;
         window.createNewProject = createNewProject;
         window.printQuote = printQuote;
+        window.goToConfigurator = goToConfigurator;
     </script>
 </head>
 <body>
@@ -304,6 +379,17 @@
     <input type="password" id="password" placeholder="Enter your password">
     <button onclick="login()">Login</button>
     <div id="errorMessage" class="error-message hidden">Invalid username or password.</div>
+</div>
+
+<!-- Overview Page (Hidden by Default) -->
+<div class="container hidden" id="overviewPage">
+    <div class="overview">
+        <h1>Saved Projects</h1>
+        <ul id="projectsList">
+            <!-- Projects will be dynamically added here -->
+        </ul>
+        <button onclick="goToConfigurator()">Create New Quote</button>
+    </div>
 </div>
 
 <!-- Configurator Page (Hidden by Default) -->
