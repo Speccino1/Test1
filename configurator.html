@@ -124,45 +124,45 @@
         };
 
         // Ladda projektdata från localStorage
-        function loadProject() {
-            console.log("loadProject() körs"); // Felsökningslogg
-            const project = JSON.parse(localStorage.getItem('currentProject'));
-            if (project) {
-                console.log("Projektdata hittades:", project); // Felsökningslogg
+      function loadProject() {
+    console.log("loadProject() körs"); // Felsökningslogg
+    const project = JSON.parse(localStorage.getItem('currentProject'));
+    if (project) {
+        console.log("Projektdata hittades:", project); // Felsökningslogg
 
-                // Fyll i kundinformation
-                document.getElementById('projectName').value = project.projectName || '';
-                document.getElementById('customerName').value = project.customerName || '';
-                document.getElementById('phoneNumber').value = project.phoneNumber || '';
-                document.getElementById('emailAddress').value = project.emailAddress || '';
-                document.getElementById('projectAddress').value = project.projectAddress || '';
+        // Fyll i kundinformation
+        document.getElementById('projectName').value = project.projectName || '';
+        document.getElementById('customerName').value = project.customerName || '';
+        document.getElementById('phoneNumber').value = project.phoneNumber || '';
+        document.getElementById('emailAddress').value = project.emailAddress || '';
+        document.getElementById('projectAddress').value = project.projectAddress || '';
 
-                // Fyll i solinstallation
-                setSelectedOption('roofType', project.roofType);
-                setSelectedOption('solarPanelBrand', project.solarPanelBrand);
-                document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
+        // Fyll i solinstallation
+        setSelectedOption('roofType', project.roofType);
+        setSelectedOption('solarPanelBrand', project.solarPanelBrand);
+        document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
 
-                // Fyll i växelriktare
-                setSelectedOption('inverterBrand', project.inverterBrand);
+        // Fyll i växelriktare
+        setSelectedOption('inverterBrand', project.inverterBrand);
 
-                // Fyll i batteri
-                setSelectedOption('batteryBrand', project.batteryBrand);
-                document.getElementById('batteryAmount').value = project.batteryAmount || '';
-                document.getElementById('batterySize').value = project.batterySize || '';
+        // Fyll i batteri
+        setSelectedOption('batteryBrand', project.batteryBrand);
+        document.getElementById('batteryAmount').value = project.batteryAmount || '';
+        document.getElementById('batterySize').value = project.batterySize || '';
 
-                // Fyll i smartmätare
-                setSelectedOption('smartMeterBrand', project.smartMeterBrand);
+        // Fyll i smartmätare
+        setSelectedOption('smartMeterBrand', project.smartMeterBrand);
 
-                // Fyll i laddare
-                setSelectedOption('chargerType', project.chargerType);
+        // Fyll i laddare
+        setSelectedOption('chargerType', project.chargerType);
 
-                // Uppdatera smartmätare och batteridetaljer
-                updateSmartMeter();
-                updateBatteryDetails();
-            } else {
-                console.log("Ingen projektdata hittades i localStorage"); // Felsökningslogg
-            }
-        }
+        // Uppdatera smartmätare och batteridetaljer
+        updateSmartMeter();
+        updateBatteryDetails();
+    } else {
+        console.log("Ingen projektdata hittades i localStorage"); // Felsökningslogg
+    }
+}
 
         // Hjälpfunktion för att sätta valt alternativ i ett select-element
         function setSelectedOption(selectId, value) {
