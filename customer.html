@@ -82,21 +82,30 @@
         }
 
         function saveCustomerDetails() {
-            const project = {
-                projectName: document.getElementById('projectName').value,
-                customerName: document.getElementById('customerName').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                emailAddress: document.getElementById('emailAddress').value,
-                projectAddress: document.getElementById('projectAddress').value,
-                lastModified: new Date().toLocaleString(), // Lägg till tidsstämpel
-            };
+    const project = {
+        projectName: document.getElementById('projectName').value,
+        customerName: document.getElementById('customerName').value,
+        phoneNumber: document.getElementById('phoneNumber').value,
+        emailAddress: document.getElementById('emailAddress').value,
+        projectAddress: document.getElementById('projectAddress').value,
+        roofType: "", // Lägg till tomma värden för dessa fält
+        solarPanelBrand: "",
+        solarPanelAmount: "",
+        inverterBrand: "",
+        batteryBrand: "",
+        batteryAmount: "",
+        batterySize: "",
+        smartMeterBrand: "",
+        chargerType: "",
+        lastModified: new Date().toLocaleString(), // Lägg till tidsstämpel
+    };
 
-            // Spara kunduppgifter i localStorage
-            localStorage.setItem('currentProject', JSON.stringify(project));
+    // Spara kunduppgifter i localStorage
+    localStorage.setItem('currentProject', JSON.stringify(project));
 
-            // Gå till nästa sida
-            window.location.href = 'configurator.html';
-        }
+    // Gå till nästa sida
+    window.location.href = 'configurator.html';
+}
     </script>
 </body>
 </html>
