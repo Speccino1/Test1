@@ -93,7 +93,11 @@
 
                 // Batterisystem
                 document.getElementById('batteryBrand').value = project.batteryBrand || '0';
+                document.getElementById('batteryAmount').value = project.batteryAmount || '';
                 document.getElementById('batterySize').value = project.batterySize || '';
+                document.getElementById('batteryCost').value = project.batteryCost || '';
+
+                // Smartmätare
                 document.getElementById('smartMeterBrand').value = project.smartMeterBrand || '0';
 
                 // Laddare
@@ -114,9 +118,33 @@
             document.getElementById('solarPanelAmount').value = '';
             document.getElementById('inverterBrand').selectedIndex = 0;
             document.getElementById('batteryBrand').selectedIndex = 0;
+            document.getElementById('batteryAmount').value = '';
             document.getElementById('batterySize').value = '';
+            document.getElementById('batteryCost').value = '';
             document.getElementById('smartMeterBrand').selectedIndex = 0;
             document.getElementById('chargerType').selectedIndex = 0;
+        }
+
+        function updateBatteryDetails() {
+            const batteryBrand = document.getElementById('batteryBrand');
+            const batteryAmount = document.getElementById('batteryAmount').value;
+            const batterySize = document.getElementById('batterySize');
+            const batteryCost = document.getElementById('batteryCost');
+
+            if (batteryBrand.value !== "0" && batteryAmount > 0) {
+                const selectedOption = batteryBrand.options[batteryBrand.selectedIndex];
+                const capacity = parseFloat(selectedOption.getAttribute('data-capacity'));
+                const price = parseFloat(selectedOption.value);
+
+                const totalCapacity = capacity * batteryAmount;
+                const totalCost = price * batteryAmount;
+
+                batterySize.value = totalCapacity.toFixed(2) + " kWh";
+                batteryCost.value = totalCost.toFixed(2) + " SEK";
+            } else {
+                batterySize.value = "";
+                batteryCost.value = "";
+            }
         }
 
         async function generateQuote() {
@@ -131,17 +159,18 @@
             const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
             const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
             const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
-            const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
+            const batteryAmount = parseInt(document.getElementById('batteryAmount').value) || 0;
+            const batterySize = parseFloat(document.getElementById('batterySize').value) || 0;
+            const batteryCost = parseFloat(document.getElementById('batteryCost').value) || 0;
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
             const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
 
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
-            const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
             const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
 
-            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
+            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterBrandCost + chargerTypeCost;
 
             const project = {
                 projectName,
@@ -155,7 +184,9 @@
                 inverterBrand,
                 inverterBrandCost,
                 batteryBrand,
+                batteryAmount,
                 batterySize,
+                batteryCost,
                 smartMeterBrand,
                 chargerType,
                 totalPrice,
@@ -174,6 +205,7 @@
         };
         window.generateQuote = generateQuote;
         window.clearForm = clearForm;
+        window.updateBatteryDetails = updateBatteryDetails;
     </script>
 </head>
 <body>
@@ -289,13 +321,28 @@
         <div class="system">
             <h2>Batteri</h2>
             <label for="batteryBrand">Batterimärke:</label>
-            <select id="batteryBrand">
+            <select id="batteryBrand" onchange="updateBatteryDetails()">
                 <option value="0">Välj batterimärke</option>
-                <option value="700">Märke P</option>
-                <option value="800">Märke Q</option>
+                <option value="24000" data-capacity="8">SigenStor BAT 8.0</option>
+                <option value="19000" data-capacity="5">Growatt APX 5.0P-B1</option>
+                <option value="16391" data-capacity="5">Huawei LUNA2000-5-E0</option>
+                <option value="27673" data-capacity="6.9">Huawei LUNA2000-7KW-S1</option>
+                <option value="14000" data-capacity="5.12">Pylontech Force H3</option>
+                <option value="10600" data-capacity="3.2">Sungrow SBR</option>
+                <option value="18776" data-capacity="5">Sungrow SBH</option>
+                <option value="15000" data-capacity="2.56">BYD HVS</option>
             </select>
-            <label for="batterySize">Batteristorlek (kWh):</label>
-            <input type="number" id="batterySize" placeholder="Ange batteristorlek" min="0">
+            <label for="batteryAmount">Antal batterier:</label>
+            <input type="number" id="batteryAmount" placeholder="Ange antal batterier" min="1" oninput="updateBatteryDetails()">
+            <label for="batterySize">Total batterikapacitet (kWh):</label>
+            <input type="text" id="batterySize" readonly>
+            <label for="batteryCost">Total batterikostnad (SEK):</label>
+            <input type="text" id="batteryCost" readonly>
+        </div>
+
+        <!-- Smartmätare -->
+        <div class="system">
+            <h2>Smartmätare</h2>
             <label for="smartMeterBrand">Smartmätarmärke:</label>
             <select id="smartMeterBrand">
                 <option value="0">Välj smartmätarmärke</option>
