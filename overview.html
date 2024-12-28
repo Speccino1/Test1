@@ -113,7 +113,7 @@
                 `;
                 row.addEventListener('click', () => {
                     localStorage.setItem('currentProject', JSON.stringify(project.projectData));
-                    window.location.href = 'configurator.html';
+                    window.location.href = 'customer.html'; // Gå till customer.html först
                 });
                 tableBody.appendChild(row);
             });
@@ -150,8 +150,8 @@
         }
 
         function createNewQuote() {
-            localStorage.removeItem('currentProject');
-            window.location.href = 'configurator.html';
+            localStorage.removeItem('currentProject'); // Rensa eventuell tidigare data
+            window.location.href = 'customer.html'; // Gå till customer.html först
         }
 
         window.onload = () => loadProjects(username);
