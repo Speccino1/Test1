@@ -51,6 +51,15 @@
         table tr:hover {
             background-color: #f1f1f1;
         }
+        .search-sort-box {
+            margin-bottom: 20px;
+        }
+        .search-sort-box input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
@@ -130,8 +139,22 @@
             displayProjects(projectsArray);
         }
 
+        function searchProjects() {
+            const searchQuery = document.getElementById('searchBox').value.toLowerCase();
+
+            const filteredProjects = projectsArray.filter(project =>
+                project.customerName.toLowerCase().includes(searchQuery) ||
+                project.projectAddress.toLowerCase().includes(searchQuery) ||
+                project.projectName.toLowerCase().includes(searchQuery) ||
+                project.phoneNumbers.toLowerCase().includes(searchQuery)
+            );
+
+            displayProjects(filteredProjects);
+        }
+
         window.onload = () => loadProjects(username);
         window.sortTable = sortTable;
+        window.searchProjects = searchProjects;
     </script>
 </head>
 <body>
@@ -140,6 +163,9 @@
             <button onclick="window.location.href='configurator.html'">Create New Quote</button>
         </div>
         <h1>Saved Projects</h1>
+        <div class="search-sort-box">
+            <input type="text" id="searchBox" placeholder="Search projects..." oninput="searchProjects()">
+        </div>
         <table>
             <thead>
                 <tr>
