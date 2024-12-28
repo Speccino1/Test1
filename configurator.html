@@ -163,14 +163,14 @@
             const batterySize = parseFloat(document.getElementById('batterySize').value) || 0;
             const batteryCost = parseFloat(document.getElementById('batteryCost').value) || 0;
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
+            const smartMeterCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
 
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
-            const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
 
-            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterBrandCost + chargerTypeCost;
+            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterCost + chargerTypeCost;
 
             const project = {
                 projectName,
@@ -188,6 +188,7 @@
                 batterySize,
                 batteryCost,
                 smartMeterBrand,
+                smartMeterCost,
                 chargerType,
                 totalPrice,
             };
@@ -346,8 +347,13 @@
             <label for="smartMeterBrand">Smartmätarmärke:</label>
             <select id="smartMeterBrand">
                 <option value="0">Välj smartmätarmärke</option>
-                <option value="500">Märke M</option>
-                <option value="800">Märke N</option>
+                <option value="0">Sungrow Smart mätare</option>
+                <option value="1818">Growatt Smart mätare</option>
+                <option value="5000">Huawei EMMA</option>
+                <option value="4000">Huawei Smart mätare Jordbruk</option>
+                <option value="4400">Fronius Smart Meter 63A-3</option>
+                <option value="1600">Sigen Smart mätare</option>
+                <option value="3497">Solis Smart mätare</option>
             </select>
         </div>
 
