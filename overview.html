@@ -101,9 +101,9 @@
                 const projects = projectDoc.data();
                 projectsArray = Object.entries(projects).map(([projectName, projectData]) => ({
                     projectName,
-                    customerName: projectData.customerName,
-                    projectAddress: projectData.projectAddress,
-                    phoneNumber: projectData.phoneNumber,
+                    customerName: projectData.customerName || "",
+                    projectAddress: projectData.projectAddress || "",
+                    phoneNumber: projectData.phoneNumber || "",
                     lastModified: projectData.lastModified || "Okänd",
                     projectData,
                 }));
@@ -115,7 +115,12 @@
 
         function displayProjects(projects) {
             const tableBody = document.getElementById('projectsTable');
-            tableBody.innerHTML = '';
+            tableBody.innerHTML = ''; // Rensa tabellen
+
+            if (projects.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6">Inga projekt matchade sökningen.</td></tr>';
+                return;
+            }
 
             projects.forEach(project => {
                 const row = document.createElement('tr');
@@ -182,11 +187,11 @@
             const searchQuery = document.getElementById('searchBox').value.toLowerCase();
 
             const filteredProjects = projectsArray.filter(project =>
-                project.customerName.toLowerCase().includes(searchQuery) ||
-                project.projectAddress.toLowerCase().includes(searchQuery) ||
-                project.projectName.toLowerCase().includes(searchQuery) ||
-                project.phoneNumber.toLowerCase().includes(searchQuery) ||
-                project.lastModified.toLowerCase().includes(searchQuery)
+                (project.customerName && project.customerName.toLowerCase().includes(searchQuery)) ||
+                (project.projectAddress && project.projectAddress.toLowerCase().includes(searchQuery)) ||
+                (project.projectName && project.projectName.toLowerCase().includes(searchQuery)) ||
+                (project.phoneNumber && project.phoneNumber.toLowerCase().includes(searchQuery)) ||
+                (project.lastModified && project.lastModified.toLowerCase().includes(searchQuery))
             );
 
             displayProjects(filteredProjects);
