@@ -34,29 +34,29 @@
         .sidebar button:hover {
             background-color: #218838;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        ul li {
-            background-color: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f8f9fa;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        ul li:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        table tr:hover {
+            background-color: #f1f1f1;
         }
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
         // Add your old Firebase and JavaScript code here
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
@@ -71,102 +71,67 @@
         const db = getFirestore(app);
         const username = "user123";
 
-        async function loadProjects(username) {
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = '';
+        let projectsArray = [];
+        let sortState = { column: null, order: 'asc' };
 
+        async function loadProjects(username) {
             const projectRef = doc(db, 'projects', username);
             const projectDoc = await getDoc(projectRef);
 
             if (projectDoc.exists()) {
                 const projects = projectDoc.data();
-                const projectsArray = Object.entries(projects).map(([projectName, projectData]) => ({
+                projectsArray = Object.entries(projects).map(([projectName, projectData]) => ({
                     projectName,
+                    customerName: projectData.customerName,
                     projectAddress: projectData.projectAddress,
+                    phoneNumbers: projectData.phoneNumbers,
                     projectData,
                 }));
-                sortAndDisplayProjects(projectsArray);
+                displayProjects(projectsArray);
             } else {
-                projectsList.innerHTML = '<li>No projects found.</li>';
+                document.getElementById('projectsTable').innerHTML = '<tr><td colspan="4">No projects found.</td></tr>';
             }
         }
 
-        function sortAndDisplayProjects(projectsArray) {
-            const sortBy = document.getElementById('sortBy').value;
-            const sortOrder = document.getElementById('sortOrder').value;
+        function displayProjects(projects) {
+            const tableBody = document.getElementById('projectsTable');
+            tableBody.innerHTML = '';
 
-            if (sortBy === 'projectName') {
-                projectsArray.sort((a, b) =>
-                    sortOrder === 'asc'
-                        ? a.projectName.localeCompare(b.projectName)
-                        : b.projectName.localeCompare(a.projectName)
-                );
-            } else if (sortBy === 'projectAddress') {
-                projectsArray.sort((a, b) =>
-                    sortOrder === 'asc'
-                        ? a.projectAddress.localeCompare(b.projectAddress)
-                        : b.projectAddress.localeCompare(a.projectAddress)
-                );
-            }
-
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = '';
-            projectsArray.forEach(({ projectName, projectAddress, projectData }) => {
-                const li = document.createElement('li');
-                li.textContent = `${projectName} - ${projectAddress}`;
-                li.addEventListener('click', () => {
-                    localStorage.setItem('currentProject', JSON.stringify(projectData));
+            projects.forEach(project => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${project.customerName}</td>
+                    <td>${project.projectAddress}</td>
+                    <td>${project.projectName}</td>
+                    <td>${project.phoneNumbers}</td>
+                `;
+                row.addEventListener('click', () => {
+                    localStorage.setItem('currentProject', JSON.stringify(project.projectData));
                     window.location.href = 'configurator.html';
                 });
-                projectsList.appendChild(li);
+                tableBody.appendChild(row);
             });
         }
 
-        async function searchProjects() {
-            const searchQuery = document.getElementById('searchBox').value.toLowerCase();
-
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = '';
-
-            const projectRef = doc(db, 'projects', username);
-            const projectDoc = await getDoc(projectRef);
-
-            if (projectDoc.exists()) {
-                const projects = projectDoc.data();
-                const projectsArray = Object.entries(projects).map(([projectName, projectData]) => ({
-                    projectName,
-                    projectAddress: projectData.projectAddress,
-                    projectData,
-                }));
-
-                const filteredProjects = projectsArray.filter(
-                    ({ projectName, projectAddress }) =>
-                        projectName.toLowerCase().includes(searchQuery) ||
-                        projectAddress.toLowerCase().includes(searchQuery)
-                );
-
-                sortAndDisplayProjects(filteredProjects);
+        function sortTable(column) {
+            if (sortState.column === column) {
+                sortState.order = sortState.order === 'asc' ? 'desc' : 'asc';
             } else {
-                projectsList.innerHTML = '<li>No projects found.</li>';
+                sortState.column = column;
+                sortState.order = 'asc';
             }
+
+            projectsArray.sort((a, b) => {
+                if (a[column] < b[column]) return sortState.order === 'asc' ? -1 : 1;
+                if (a[column] > b[column]) return sortState.order === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            displayProjects(projectsArray);
         }
 
         window.onload = () => loadProjects(username);
-        window.searchProjects = searchProjects;
-        window.sortAndDisplayProjects = () => {
-            const projectRef = doc(db, 'projects', username);
-            getDoc(projectRef).then((projectDoc) => {
-                if (projectDoc.exists()) {
-                    const projects = projectDoc.data();
-                    const projectsArray = Object.entries(projects).map(([projectName, projectData]) => ({
-                        projectName,
-                        projectAddress: projectData.projectAddress,
-                        projectData,
-                    }));
-                    sortAndDisplayProjects(projectsArray);
-                }
-            });
-        };
+        window.sortTable = sortTable;
     </script>
 </head>
 <body>
@@ -175,20 +140,19 @@
             <button onclick="window.location.href='configurator.html'">Create New Quote</button>
         </div>
         <h1>Saved Projects</h1>
-        <div class="search-sort-box">
-            <input type="text" id="searchBox" placeholder="Search projects..." oninput="searchProjects()">
-            <select id="sortBy" onchange="sortAndDisplayProjects()">
-                <option value="projectName">Sort by Project Name</option>
-                <option value="projectAddress">Sort by Address</option>
-            </select>
-            <select id="sortOrder" onchange="sortAndDisplayProjects()">
-                <option value="asc">A to Z</option>
-                <option value="desc">Z to A</option>
-            </select>
-        </div>
-        <ul id="projectsList">
-            <!-- Projects will be dynamically added here -->
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th onclick="sortTable('customerName')">Customer Name</th>
+                    <th onclick="sortTable('projectAddress')">Address</th>
+                    <th onclick="sortTable('projectName')">Project Name</th>
+                    <th onclick="sortTable('phoneNumbers')">Phone Numbers</th>
+                </tr>
+            </thead>
+            <tbody id="projectsTable">
+                <!-- Projects will be dynamically added here -->
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
