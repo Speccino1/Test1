@@ -125,33 +125,59 @@
 
         // Ladda projektdata från localStorage
         function loadProject() {
-             console.log("loadProject() körs"); // Lägg till detta för att kontrollera
+            console.log("loadProject() körs"); // Felsökningslogg
             const project = JSON.parse(localStorage.getItem('currentProject'));
             if (project) {
-                // Fyll i formuläret med sparade värden
+                console.log("Projektdata hittades:", project); // Felsökningslogg
+
+                // Fyll i kundinformation
                 document.getElementById('projectName').value = project.projectName || '';
                 document.getElementById('customerName').value = project.customerName || '';
                 document.getElementById('phoneNumber').value = project.phoneNumber || '';
                 document.getElementById('emailAddress').value = project.emailAddress || '';
                 document.getElementById('projectAddress').value = project.projectAddress || '';
-                document.getElementById('roofType').value = project.roofType || '0';
-                document.getElementById('solarPanelBrand').value = project.solarPanelBrand || '0';
+
+                // Fyll i solinstallation
+                setSelectedOption('roofType', project.roofType);
+                setSelectedOption('solarPanelBrand', project.solarPanelBrand);
                 document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
-                document.getElementById('inverterBrand').value = project.inverterBrand || '0';
-                document.getElementById('batteryBrand').value = project.batteryBrand || '0';
+
+                // Fyll i växelriktare
+                setSelectedOption('inverterBrand', project.inverterBrand);
+
+                // Fyll i batteri
+                setSelectedOption('batteryBrand', project.batteryBrand);
                 document.getElementById('batteryAmount').value = project.batteryAmount || '';
                 document.getElementById('batterySize').value = project.batterySize || '';
-                document.getElementById('smartMeterBrand').value = project.smartMeterBrand || '0';
-                document.getElementById('chargerType').value = project.chargerType || '0';
+
+                // Fyll i smartmätare
+                setSelectedOption('smartMeterBrand', project.smartMeterBrand);
+
+                // Fyll i laddare
+                setSelectedOption('chargerType', project.chargerType);
 
                 // Uppdatera smartmätare och batteridetaljer
                 updateSmartMeter();
                 updateBatteryDetails();
+            } else {
+                console.log("Ingen projektdata hittades i localStorage"); // Felsökningslogg
+            }
+        }
+
+        // Hjälpfunktion för att sätta valt alternativ i ett select-element
+        function setSelectedOption(selectId, value) {
+            const selectElement = document.getElementById(selectId);
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].text === value) {
+                    selectElement.selectedIndex = i;
+                    break;
+                }
             }
         }
 
         // Uppdatera batteridetaljer
         function updateBatteryDetails() {
+            console.log("updateBatteryDetails() körs"); // Felsökningslogg
             const batteryBrand = document.getElementById('batteryBrand');
             const batteryAmount = document.getElementById('batteryAmount').value;
             const batterySize = document.getElementById('batterySize');
@@ -168,13 +194,13 @@
 
         // Uppdatera smartmätare baserat på växelriktare
         function updateSmartMeter() {
+            console.log("updateSmartMeter() körs"); // Felsökningslogg
             const inverterBrand = document.getElementById('inverterBrand');
             const smartMeterBrand = document.getElementById('smartMeterBrand');
 
             const selectedInverter = inverterBrand.options[inverterBrand.selectedIndex].text;
             const matchedSmartMeter = inverterToSmartMeterMap[selectedInverter] || "0";
 
-            // Sätt smartmätaren till matchande värde
             for (let i = 0; i < smartMeterBrand.options.length; i++) {
                 if (smartMeterBrand.options[i].text === matchedSmartMeter) {
                     smartMeterBrand.selectedIndex = i;
@@ -185,9 +211,10 @@
 
         // Generera offert
         async function generateQuote() {
+            console.log("generateQuote() körs"); // Felsökningslogg
             const project = JSON.parse(localStorage.getItem('currentProject'));
 
-            // Lägg till resten av konfigurationen
+            // Hämta värden från formuläret
             project.roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
             project.solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
             project.solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
@@ -201,19 +228,13 @@
             project.chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
             project.chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
 
-            // Beräkna totalt pris exklusive moms
+            // Beräkna totalt pris
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * project.solarPanelAmount;
 
             project.totalExclVAT = roofTypeCost + solarPanelBrandCost + project.inverterBrandCost + project.smartMeterCost + project.chargerTypeCost;
-
-            // Lägg till vinstmarginal (30%)
             project.totalWithProfit = project.totalExclVAT * 1.3;
-
-            // Lägg till moms (25%)
             project.totalInclVAT = project.totalWithProfit * 1.25;
-
-            // Uppdatera tidsstämpeln för "senast ändrad"
             project.lastModified = new Date().toLocaleString();
 
             // Spara projektet i Firebase och localStorage
@@ -225,9 +246,10 @@
         }
 
         window.onload = () => {
-            loadProject(); // Ladda projektdata när sidan laddas
-            updateSmartMeter(); // Uppdatera smartmätare
-            updateBatteryDetails(); // Uppdatera batteridetaljer
+            console.log("Sidan laddas"); // Felsökningslogg
+            loadProject();
+            updateSmartMeter();
+            updateBatteryDetails();
         };
         window.generateQuote = generateQuote;
         window.updateBatteryDetails = updateBatteryDetails;
