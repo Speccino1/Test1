@@ -90,8 +90,9 @@
         </div>
         <div class="total-price">
             <h2>💰 Totalt Pris</h2>
-            <p class="price"><span id="quoteTotalPrice"></span> SEK</p>
-            <p class="note">*Inkluderar installation och garanti.</p>
+            <p><strong>Pris exklusive moms:</strong> <span id="quoteTotalExclVAT"></span> SEK</p>
+            <p><strong>Pris inklusive vinstmarginal (30%):</strong> <span id="quoteTotalWithProfit"></span> SEK</p>
+            <p><strong>Pris inklusive moms (25%):</strong> <span id="quoteTotalInclVAT"></span> SEK</p>
         </div>
         <footer>
             <p>📞 Kontakta oss på <strong>123-456-7890</strong> för frågor.</p>
@@ -130,8 +131,10 @@
             // Visa laddardetaljer
             document.getElementById('quoteChargerType').textContent = project.chargerType;
 
-            // Visa totalpris
-            document.getElementById('quoteTotalPrice').textContent = project.totalPrice.toFixed(2);
+            // Visa priser
+            document.getElementById('quoteTotalExclVAT').textContent = project.totalExclVAT.toFixed(2);
+            document.getElementById('quoteTotalWithProfit').textContent = project.totalWithProfit.toFixed(2);
+            document.getElementById('quoteTotalInclVAT').textContent = project.totalInclVAT.toFixed(2);
         } else {
             // Om ingen projektdata finns, visa ett meddelande
             document.querySelector('.container').innerHTML = `
