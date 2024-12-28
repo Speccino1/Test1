@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,414 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Configurator</title>
     <style>
+        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
         }
+
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 20px;
-        }
-        .configurator, .overview, .quote-page {
-            flex: 1;
+            margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
         }
-        .projects-list ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .projects-list li {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-        .projects-list li:hover {
-            background-color: #f9f9f9;
-        }
+
         .hidden {
             display: none;
         }
-        .sidebar {
-            width: 200px;
-            padding: 20px;
-            border-right: 1px solid #ccc;
+
+        h1, h2 {
+            color: #2c3e50;
         }
-        .sidebar button {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .sidebar button:hover {
-            background-color: #0056b3;
-        }
-        .system {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #e3f2fd;
-            border-radius: 8px;
-        }
-        .system h2 {
-            color: #007BFF;
-            margin-bottom: 20px;
-        }
-        .quote-page {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .quote-page header {
-            margin-bottom: 30px;
-        }
-        .quote-page header h1 {
-            color: #007BFF;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .quote-page header p {
-            color: #555;
-            font-size: 1.1em;
-        }
-        .quote-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .quote-details .section {
-            flex: 1;
-            min-width: 200px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 12px;
-            text-align: left;
-        }
-        .quote-details .section h2 {
-            color: #007BFF;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-        .quote-details .section p {
-            margin: 10px 0;
-            color: #333;
-        }
-        .total-price {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e3f2fd;
-            border-radius: 12px;
-        }
-        .total-price h2 {
-            color: #007BFF;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-        .total-price .price {
-            font-size: 2.5em;
-            color: #007BFF;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .total-price .note {
-            color: #555;
-            font-size: 0.9em;
-        }
-        .quote-page footer {
-            margin-top: 30px;
-            color: #555;
-            font-size: 1em;
-        }
-        .quote-page footer p {
-            margin: 5px 0;
-        }
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-            }
-            .quote-page {
-                padding: 20px;
-                border-radius: 0;
-                box-shadow: none;
-            }
-            .quote-page header h1 {
-                font-size: 2em;
-            }
-            .quote-details .section {
-                background-color: #fff;
-                border: 1px solid #ddd;
-            }
-            .total-price {
-                background-color: #fff;
-                border: 1px solid #ddd;
-            }
-            .quote-page footer {
-                margin-top: 20px;
-            }
-            .container button {
-                display: none;
-            }
-        }
-        .overview label {
+
+        label {
             display: block;
             margin: 10px 0 5px;
+            font-weight: bold;
         }
-        .overview input {
+
+        input, select, button {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
-        .overview button {
-            padding: 8px 12px;
-            background-color: #007BFF;
-            color: white;
+
+        button {
+            background-color: #3498db;
+            color: #fff;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .overview button:hover {
-            background-color: #0056b3;
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .sidebar {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+
+        .overview {
+            overflow: hidden;
+        }
+
+        .quote-page {
+            text-align: center;
+        }
+
+        .quote-details {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .total-price {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
     <!-- Add Firebase SDK -->
     <script type="module">
-        // Import the functions you need from the Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
-            authDomain: "configurator-e8f0b.firebaseapp.com",
-            projectId: "configurator-e8f0b",
-            storageBucket: "configurator-e8f0b.firebasestorage.app",
-            messagingSenderId: "680598761938",
-            appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-
-        // Initialize Firestore
-        const db = getFirestore(app);
-
-        // Hardcoded login credentials for demonstration
-        const validUsername = "user123";
-        const validPassword = "pass123";
-
-        // Login Function
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (username === validUsername && password === validPassword) {
-                // Hide login page and show overview page
-                document.getElementById('loginPage').classList.add('hidden');
-                document.getElementById('overviewPage').classList.remove('hidden');
-                // Load saved projects
-                loadProjects(username);
-            } else {
-                // Show error message
-                document.getElementById('errorMessage').classList.remove('hidden');
-            }
-        }
-
-        // Load Projects Function
-        async function loadProjects(username) {
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = ''; // Clear the list
-
-            const projectRef = doc(db, 'projects', username);
-            const projectDoc = await getDoc(projectRef);
-
-            if (projectDoc.exists()) {
-                const projects = projectDoc.data();
-                for (const [projectName, projectData] of Object.entries(projects)) {
-                    const li = document.createElement('li');
-                    li.textContent = `${projectName} - ${projectData.projectAddress}`;
-                    li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
-                    projectsList.appendChild(li);
-                }
-            } else {
-                projectsList.innerHTML = '<li>No projects found.</li>';
-            }
-        }
-
-        // Load Project into Configurator
-        function loadProjectIntoConfigurator(project) {
-            document.getElementById('projectName').value = project.projectName;
-            document.getElementById('projectAddress').value = project.projectAddress;
-            document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
-            document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
-            document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
-            document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
-            document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
-            document.getElementById('batterySize').value = project.batterySize;
-            document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
-            document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
-
-            // Hide overview page and show configurator page
-            document.getElementById('overviewPage').classList.add('hidden');
-            document.getElementById('configuratorPage').classList.remove('hidden');
-        }
-
-        // Go to Configurator for New Quote
-        function goToConfigurator() {
-            // Hide overview page and show configurator page
-            document.getElementById('overviewPage').classList.add('hidden');
-            document.getElementById('configuratorPage').classList.remove('hidden');
-        }
-
-        // Generate Quote Function
-        async function generateQuote() {
-            // Get values from Configurator
-            const projectName = document.getElementById('projectName').value;
-            const projectAddress = document.getElementById('projectAddress').value;
-            const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
-            const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
-            const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
-            const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
-            const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
-            const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
-            const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
-            const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
-
-            // Calculate total price
-            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
-            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
-            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
-            const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
-            const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
-            const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
-
-            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
-
-            // Display values on the quote page
-            document.getElementById('quoteProjectName').textContent = projectName;
-            document.getElementById('quoteProjectAddress').textContent = projectAddress;
-            document.getElementById('quoteRoofType').textContent = roofType;
-            document.getElementById('quoteSolarPanelBrand').textContent = solarPanelBrand;
-            document.getElementById('quoteSolarPanelAmount').textContent = solarPanelAmount;
-            document.getElementById('quoteInverterBrand').textContent = inverterBrand;
-            document.getElementById('quoteBatteryBrand').textContent = batteryBrand;
-            document.getElementById('quoteBatterySize').textContent = batterySize;
-            document.getElementById('quoteSmartMeterBrand').textContent = smartMeterBrand;
-            document.getElementById('quoteChargerType').textContent = chargerType;
-            document.getElementById('quoteTotalPrice').textContent = totalPrice.toFixed(2);
-
-            // Save project to Firestore
-            const project = {
-                projectName,
-                projectAddress,
-                roofType,
-                solarPanelBrand,
-                solarPanelAmount,
-                inverterBrand,
-                batteryBrand,
-                batterySize,
-                smartMeterBrand,
-                chargerType,
-                totalPrice,
-            };
-            await saveProject(project);
-
-            // Reload projects list
-            loadProjects(validUsername);
-
-            // Hide configurator page and show quote page
-            document.getElementById('configuratorPage').classList.add('hidden');
-            document.getElementById('quotePage').classList.remove('hidden');
-        }
-
-        // Save Project Function
-        async function saveProject(project) {
-            const username = document.getElementById('username').value;
-            const projectRef = doc(db, 'projects', username); // Use username as the document ID
-            await setDoc(projectRef, { [project.projectName]: project }, { merge: true });
-        }
-
-        // Create New Project Function
-        function createNewProject() {
-            document.getElementById('quotePage').classList.add('hidden');
-            document.getElementById('configuratorPage').classList.remove('hidden');
-        }
-
-        // Print Quote Function
-        function printQuote() {
-            window.print();
-        }
-
-        // Go to Overview Function
-        function goToOverview() {
-            document.getElementById('quotePage').classList.add('hidden');
-            document.getElementById('overviewPage').classList.remove('hidden');
-        }
-
-        // Filter Projects Function
-        async function filterProjects() {
-            const filterProjectName = document.getElementById('filterProjectName').value.toLowerCase();
-            const filterAddress = document.getElementById('filterAddress').value.toLowerCase();
-
-            const projectsList = document.getElementById('projectsList');
-            projectsList.innerHTML = ''; // Clear the list
-
-            const projectRef = doc(db, 'projects', validUsername);
-            const projectDoc = await getDoc(projectRef);
-
-            if (projectDoc.exists()) {
-                const projects = projectDoc.data();
-                for (const [projectName, projectData] of Object.entries(projects)) {
-                    // Check if the project matches the filter criteria
-                    if (
-                        projectName.toLowerCase().includes(filterProjectName) &&
-                        projectData.projectAddress.toLowerCase().includes(filterAddress)
-                    ) {
-                        const li = document.createElement('li');
-                        li.textContent = `${projectName} - ${projectData.projectAddress}`;
-                        li.addEventListener('click', () => loadProjectIntoConfigurator(projectData));
-                        projectsList.appendChild(li);
-                    }
-                }
-            } else {
-                projectsList.innerHTML = '<li>No projects found.</li>';
-            }
-        }
-
-        // Attach functions to the window object for HTML onclick
-        window.login = login;
-        window.generateQuote = generateQuote;
-        window.createNewProject = createNewProject;
-        window.printQuote = printQuote;
-        window.goToConfigurator = goToConfigurator;
-        window.goToOverview = goToOverview;
-        window.filterProjects = filterProjects;
+        // (Keep the existing Firebase and JavaScript logic here)
     </script>
 </head>
 <body>
 
-<!-- Login Page -->
-<div class="container" id="loginPage">
-    <h1>Login</h1>
+<!-- Login Page (Hidden by Default) -->
+<div class="container hidden" id="loginPage">
+    <h1>Welcome to Solar System Configurator</h1>
     <label for="username">Username:</label>
     <input type="text" id="username" placeholder="Enter your username">
     <label for="password">Password:</label>
