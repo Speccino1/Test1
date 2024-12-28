@@ -5,36 +5,243 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Configurator</title>
     <style>
-        /* Add the CSS styles from earlier here */
-        .search-sort-box {
-            margin-bottom: 20px;
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
         }
-        .search-sort-box input,
-        .search-sort-box select {
-            padding: 8px;
-            font-size: 16px;
-            margin-right: 10px;
-        }
+
         .hidden {
             display: none;
         }
+
+        /* Fixed Header */
         .fixed-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: #f8f9fa;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
         .fixed-header button {
-            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
+
+        .fixed-header button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Container */
         .container {
-            margin-top: 60px; /* Add margin to avoid overlap with the fixed header */
+            margin-top: 80px;
+            padding: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Login Page */
+        #loginPage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #007bff;
+        }
+
+        #loginPage .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        #loginPage h1 {
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        #loginPage button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #loginPage button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Overview Page */
+        #overviewPage .sidebar {
+            margin-bottom: 20px;
+        }
+
+        #overviewPage .sidebar button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #overviewPage .sidebar button:hover {
+            background-color: #218838;
+        }
+
+        #overviewPage .search-sort-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #overviewPage .search-sort-box input,
+        #overviewPage .search-sort-box select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        #overviewPage ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #overviewPage ul li {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #overviewPage ul li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Configurator Page */
+        #configuratorPage .system {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #configuratorPage label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #configuratorPage input,
+        #configuratorPage select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        #configuratorPage button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #configuratorPage button:hover {
+            background-color: #218838;
+        }
+
+        /* Quote Page */
+        #quotePage .quote-page {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #quotePage .section {
+            margin-bottom: 20px;
+        }
+
+        #quotePage .section h2 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        #quotePage .total-price {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #quotePage .total-price h2 {
+            color: #28a745;
+        }
+
+        #quotePage .total-price .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #quotePage footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #777;
+        }
+
+        #quotePage button {
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #quotePage button:hover {
+            background-color: #0056b3;
         }
     </style>
     <!-- Add Firebase SDK -->
@@ -67,6 +274,8 @@
             // Hide login page and show overview page
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('overviewPage').classList.remove('hidden');
+            // Show the fixed header
+            document.getElementById('fixedHeader').classList.remove('hidden');
             // Load saved projects
             loadProjects(username);
         }
@@ -295,14 +504,16 @@
 <body>
 
 <!-- Fixed Header -->
-<div class="fixed-header" id="fixedHeader">
+<div class="fixed-header hidden" id="fixedHeader">
     <button onclick="goToOverview()">Return to Overview</button>
 </div>
 
 <!-- Login Page (Visible by Default) -->
 <div class="container" id="loginPage">
-    <h1>Login</h1>
-    <button onclick="login()">Login</button>
+    <div class="login-box">
+        <h1>Welcome to Solar Configurator</h1>
+        <button onclick="login()">Get Started</button>
+    </div>
 </div>
 
 <!-- Overview Page (Hidden by Default) -->
