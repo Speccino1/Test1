@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar System Configurator - Configurator</title>
+    <title>Solenergisystem Konfigurator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -73,20 +73,26 @@
             const project = JSON.parse(localStorage.getItem('currentProject'));
             if (project) {
                 document.getElementById('projectName').value = project.projectName;
+                document.getElementById('customerName').value = project.customerName;
+                document.getElementById('phoneNumber').value = project.phoneNumber;
+                document.getElementById('emailAddress').value = project.emailAddress;
                 document.getElementById('projectAddress').value = project.projectAddress;
-                document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
+                document.getElementById('roofType').value = project.roofType;
                 document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
                 document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
-                document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
-                document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
+                document.getElementById('inverterBrand').value = project.inverterBrand.includes('Märke A') ? '3000' : '4000';
+                document.getElementById('batteryBrand').value = project.batteryBrand.includes('Märke P') ? '700' : '800';
                 document.getElementById('batterySize').value = project.batterySize;
-                document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
-                document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
+                document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Märke M') ? '500' : '800';
+                document.getElementById('chargerType').value = project.chargerType.includes('Typ 1') ? '1000' : '1500';
             }
         }
 
         async function generateQuote() {
             const projectName = document.getElementById('projectName').value;
+            const customerName = document.getElementById('customerName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const emailAddress = document.getElementById('emailAddress').value;
             const projectAddress = document.getElementById('projectAddress').value;
             const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
             const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
@@ -108,6 +114,9 @@
 
             const project = {
                 projectName,
+                customerName,
+                phoneNumber,
+                emailAddress,
                 projectAddress,
                 roofType,
                 solarPanelBrand,
@@ -131,28 +140,40 @@
 </head>
 <body>
     <div class="container">
-        <h1>Solar System Configurator</h1>
+        <h1>Solenergisystem Konfigurator</h1>
 
-        <!-- Project Name -->
-        <label for="projectName">Project Name:</label>
-        <input type="text" id="projectName" placeholder="Enter project name">
+        <!-- Projektnamn -->
+        <label for="projectName">Projektnamn:</label>
+        <input type="text" id="projectName" placeholder="Ange projektnamn">
 
-        <!-- Address -->
-        <label for="projectAddress">Address:</label>
-        <input type="text" id="projectAddress" placeholder="Enter project address">
+        <!-- Kunduppgifter -->
+        <label for="customerName">Kundnamn:</label>
+        <input type="text" id="customerName" placeholder="Ange kundens namn">
 
-        <!-- Solar Installation System -->
+        <label for="phoneNumber">Telefonnummer:</label>
+        <input type="text" id="phoneNumber" placeholder="Ange telefonnummer">
+
+        <label for="emailAddress">E-postadress:</label>
+        <input type="email" id="emailAddress" placeholder="Ange e-postadress">
+
+        <!-- Adress -->
+        <label for="projectAddress">Adress:</label>
+        <input type="text" id="projectAddress" placeholder="Ange adress">
+
+        <!-- Solinstallation -->
         <div class="system">
-            <h2>Solar Installation</h2>
-            <label for="roofType">Roof Type:</label>
+            <h2>Solinstallation</h2>
+            <label for="roofType">Taktyp:</label>
             <select id="roofType">
-                <option value="0">Select Roof Type</option>
-                <option value="5000">Flat Roof - 5000 SEK</option>
-                <option value="6000">Sloped Roof - 6000 SEK</option>
+                <option value="0">Välj taktyp</option>
+                <option value="5000">Plåttak - 5000 SEK</option>
+                <option value="6000">Falsat plåttak - 6000 SEK</option>
+                <option value="7000">Betong / Tegeltak - 7000 SEK</option>
+                <option value="8000">Papptak - 8000 SEK</option>
             </select>
-            <label for="solarPanelBrand">Solar Panel Brand:</label>
+            <label for="solarPanelBrand">Solpanelsmärke:</label>
             <select id="solarPanelBrand">
-                <option value="0">Select Solar Panel Brand</option>
+                <option value="0">Välj solpanelsmärke</option>
                 <option value="900">DMEGC helsvart 450W glas/glas (Art.nr: DM450M10RT-B54HBB) - 900 SEK</option>
                 <option value="940">DMEGC helsvart 500W (Art.nr: DM500M10RT-60HBB) - 940 SEK</option>
                 <option value="1000">AIKO 455W helsvart Glas/glas (Art.nr: A455-MAH54Db) - 1000 SEK</option>
@@ -161,47 +182,47 @@
                 <option value="900">Longi 505W Helsvart (Art.nr: Longi LR7) - 900 SEK</option>
                 <option value="1030">Longi 530W Svart ram (Art.nr: LR5-66HTH-530M) - 1030 SEK</option>
             </select>
-            <label for="solarPanelAmount">Number of Solar Panels:</label>
-            <input type="number" id="solarPanelAmount" placeholder="Enter number of panels" min="0">
-            <label for="inverterBrand">Inverter Brand:</label>
+            <label for="solarPanelAmount">Antal solpaneler:</label>
+            <input type="number" id="solarPanelAmount" placeholder="Ange antal paneler" min="0">
+            <label for="inverterBrand">Omriktarmärke:</label>
             <select id="inverterBrand">
-                <option value="0">Select Inverter Brand</option>
-                <option value="3000">Brand A - 3000 SEK</option>
-                <option value="4000">Brand B - 4000 SEK</option>
+                <option value="0">Välj omriktarmärke</option>
+                <option value="3000">Märke A - 3000 SEK</option>
+                <option value="4000">Märke B - 4000 SEK</option>
             </select>
         </div>
 
-        <!-- Battery System -->
+        <!-- Batterisystem -->
         <div class="system">
-            <h2>Battery</h2>
-            <label for="batteryBrand">Battery Brand:</label>
+            <h2>Batteri</h2>
+            <label for="batteryBrand">Batterimärke:</label>
             <select id="batteryBrand">
-                <option value="0">Select Battery Brand</option>
-                <option value="700">Brand P - 700 SEK per kWh</option>
-                <option value="800">Brand Q - 800 SEK per kWh</option>
+                <option value="0">Välj batterimärke</option>
+                <option value="700">Märke P - 700 SEK per kWh</option>
+                <option value="800">Märke Q - 800 SEK per kWh</option>
             </select>
-            <label for="batterySize">Battery Size (kWh):</label>
-            <input type="number" id="batterySize" placeholder="Enter battery size" min="0">
-            <label for="smartMeterBrand">Smart Meter Brand:</label>
+            <label for="batterySize">Batteristorlek (kWh):</label>
+            <input type="number" id="batterySize" placeholder="Ange batteristorlek" min="0">
+            <label for="smartMeterBrand">Smartmätarmärke:</label>
             <select id="smartMeterBrand">
-                <option value="0">Select Smart Meter Brand</option>
-                <option value="500">Brand M - 500 SEK</option>
-                <option value="800">Brand N - 800 SEK</option>
+                <option value="0">Välj smartmätarmärke</option>
+                <option value="500">Märke M - 500 SEK</option>
+                <option value="800">Märke N - 800 SEK</option>
             </select>
         </div>
 
-        <!-- Chargers System -->
+        <!-- Laddare -->
         <div class="system">
-            <h2>Chargers</h2>
-            <label for="chargerType">Charger Type:</label>
+            <h2>Laddare</h2>
+            <label for="chargerType">Laddartyp:</label>
             <select id="chargerType">
-                <option value="0">Select Charger Type</option>
-                <option value="1000">Type 1 - 1000 SEK</option>
-                <option value="1500">Type 2 - 1500 SEK</option>
+                <option value="0">Välj laddartyp</option>
+                <option value="1000">Typ 1 - 1000 SEK</option>
+                <option value="1500">Typ 2 - 1500 SEK</option>
             </select>
         </div>
 
-        <button onclick="generateQuote()">Generate Quote</button>
+        <button onclick="generateQuote()">Generera Offer</button>
     </div>
 </body>
 </html>
