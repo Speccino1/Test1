@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar System Configurator - Configurator</title>
     <style>
+        /* Add your old CSS here */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -44,6 +45,84 @@
             background-color: #218838;
         }
     </style>
+    <!-- Add Firebase SDK -->
+    <script type="module">
+        // Add your old Firebase and JavaScript code here
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQxia-AP54hG5Ku3Gs1xj17SJirzdDs4A",
+            authDomain: "configurator-e8f0b.firebaseapp.com",
+            projectId: "configurator-e8f0b",
+            storageBucket: "configurator-e8f0b.appspot.com",
+            messagingSenderId: "680598761938",
+            appId: "1:680598761938:web:aa4aa2a8e88e84a33cd80b",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const username = "user123";
+
+        function loadProject() {
+            const project = JSON.parse(localStorage.getItem('currentProject'));
+            if (project) {
+                document.getElementById('projectName').value = project.projectName;
+                document.getElementById('projectAddress').value = project.projectAddress;
+                document.getElementById('roofType').value = project.roofType.includes('Flat') ? '5000' : '6000';
+                document.getElementById('solarPanelBrand').value = project.solarPanelBrand.includes('DMEGC') ? '900' : '1000';
+                document.getElementById('solarPanelAmount').value = project.solarPanelAmount;
+                document.getElementById('inverterBrand').value = project.inverterBrand.includes('Brand A') ? '3000' : '4000';
+                document.getElementById('batteryBrand').value = project.batteryBrand.includes('Brand P') ? '700' : '800';
+                document.getElementById('batterySize').value = project.batterySize;
+                document.getElementById('smartMeterBrand').value = project.smartMeterBrand.includes('Brand M') ? '500' : '800';
+                document.getElementById('chargerType').value = project.chargerType.includes('Type 1') ? '1000' : '1500';
+            }
+        }
+
+        async function generateQuote() {
+            const projectName = document.getElementById('projectName').value;
+            const projectAddress = document.getElementById('projectAddress').value;
+            const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
+            const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
+            const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
+            const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
+            const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
+            const batterySize = parseInt(document.getElementById('batterySize').value) || 0;
+            const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
+            const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
+
+            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
+            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
+            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
+            const batteryBrandCost = parseFloat(document.getElementById('batteryBrand').value) * batterySize;
+            const smartMeterBrandCost = parseFloat(document.getElementById('smartMeterBrand').value);
+            const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
+
+            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryBrandCost + smartMeterBrandCost + chargerTypeCost;
+
+            const project = {
+                projectName,
+                projectAddress,
+                roofType,
+                solarPanelBrand,
+                solarPanelAmount,
+                inverterBrand,
+                batteryBrand,
+                batterySize,
+                smartMeterBrand,
+                chargerType,
+                totalPrice,
+            };
+
+            await setDoc(doc(db, 'projects', username), { [project.projectName]: project }, { merge: true });
+            localStorage.setItem('currentQuote', JSON.stringify(project));
+            window.location.href = 'quote.html';
+        }
+
+        window.onload = loadProject;
+        window.generateQuote = generateQuote;
+    </script>
 </head>
 <body>
     <div class="container">
@@ -52,7 +131,8 @@
         <input type="text" id="projectName" placeholder="Enter project name">
         <label for="projectAddress">Address:</label>
         <input type="text" id="projectAddress" placeholder="Enter project address">
-        <button onclick="window.location.href='quote.html'">Generate Quote</button>
+        <!-- Add the rest of your form fields here -->
+        <button onclick="generateQuote()">Generate Quote</button>
     </div>
 </body>
 </html>
