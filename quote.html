@@ -89,7 +89,7 @@
         </div>
         <div class="total-price">
             <h2>💰 Totalt Pris</h2>
-            <p><strong>Pris inklusive vinstpåslag (exklusive moms):</strong> <span id="quoteTotalWithProfit"></span> SEK</p>
+            <p><strong>Pris exklusive moms:</strong> <span id="quoteTotalExclVAT"></span> SEK</p>
             <p><strong>Pris inklusive moms:</strong> <span id="quoteTotalInclVAT"></span> SEK</p>
         </div>
         <footer>
@@ -129,7 +129,7 @@
             document.getElementById('quoteChargerType').textContent = project.chargerType;
 
             // Visa priser
-            document.getElementById('quoteTotalWithProfit').textContent = project.totalWithProfit.toFixed(2);
+            document.getElementById('quoteTotalExclVAT').textContent = project.totalExclVAT.toFixed(2);
             document.getElementById('quoteTotalInclVAT').textContent = project.totalInclVAT.toFixed(2);
         } else {
             // Om ingen projektdata finns, visa ett meddelande
