@@ -165,15 +165,15 @@
 }
 
         // Hjälpfunktion för att sätta valt alternativ i ett select-element
-        function setSelectedOption(selectId, value) {
-            const selectElement = document.getElementById(selectId);
-            for (let i = 0; i < selectElement.options.length; i++) {
-                if (selectElement.options[i].text === value) {
-                    selectElement.selectedIndex = i;
-                    break;
-                }
-            }
+      function setSelectedOption(selectId, value) {
+    const selectElement = document.getElementById(selectId);
+    for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].text === value) {
+            selectElement.selectedIndex = i;
+            break;
         }
+    }
+}
 
         // Uppdatera batteridetaljer
         function updateBatteryDetails() {
