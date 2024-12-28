@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Configurator</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .sidebar {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+
+        .overview {
+            overflow: hidden;
+        }
+
+        .quote-page {
+            text-align: center;
+        }
+
+        .quote-details {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .total-price {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <!-- Add Firebase SDK -->
+    <script type="module">
+        // (Keep the existing Firebase and JavaScript logic here)
+    </script>
+</head>
+<body>
+
+<!-- Login Page (Hidden by Default) -->
+<div class="container hidden" id="loginPage">
+    <h1>Welcome to Solar System Configurator</h1>
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter your username">
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter your password">
+    <button onclick="login()">Login</button>
+    <div id="errorMessage" class="error-message hidden">Invalid username or password.</div>
+</div>
+
+<!-- Overview Page (Hidden by Default) -->
+<div class="container hidden" id="overviewPage">
+    <div class="sidebar">
+        <button onclick="goToConfigurator()">Create New Quote</button>
+    </div>
+    <div class="overview">
+        <h1>Saved Projects</h1>
+        <!-- Filter and Search Fields -->
+        <div>
+            <label for="filterProjectName">Filter by Project Name:</label>
+            <input type="text" id="filterProjectName" placeholder="Enter project name">
+            <label for="filterAddress">Filter by Address:</label>
+            <input type="text" id="filterAddress" placeholder="Enter address">
+            <button onclick="filterProjects()">Search</button>
+        </div>
+        <!-- Projects List -->
+        <ul id="projectsList">
+            <!-- Projects will be dynamically added here -->
+        </ul>
+    </div>
+</div>
+
+<!-- Configurator Page (Hidden by Default) -->
+<div class="container hidden" id="configuratorPage">
+    <h1>Solar System Configurator</h1>
+
+    <!-- Project Name -->
+    <label for="projectName">Project Name:</label>
+    <input type="text" id="projectName" placeholder="Enter project name">
+
+    <!-- Address -->
+    <label for="projectAddress">Address:</label>
+    <input type="text" id="projectAddress" placeholder="Enter project address">
+
+    <!-- Solar Installation System -->
+    <div class="system">
+        <h2>Solar Installation</h2>
+        <label for="roofType">Roof Type:</label>
+        <select id="roofType">
+            <option value="0">Select Roof Type</option>
+            <option value="5000">Flat Roof - 5000 SEK</option>
+            <option value="6000">Sloped Roof - 6000 SEK</option>
+        </select>
+        <label for="solarPanelBrand">Solar Panel Brand:</label>
+        <select id="solarPanelBrand">
+            <option value="0">Select Solar Panel Brand</option>
+            <option value="900">DMEGC helsvart 450W glas/glas (Art.nr: DM450M10RT-B54HBB) - 900 SEK</option>
+            <option value="940">DMEGC helsvart 500W (Art.nr: DM500M10RT-60HBB) - 940 SEK</option>
+            <option value="1000">AIKO 455W helsvart Glas/glas (Art.nr: A455-MAH54Db) - 1000 SEK</option>
+            <option value="900">AIKO 455W helsvart (Art.nr: AIKO-A-MAH54Mb-455W) - 900 SEK</option>
+            <option value="900">Longi 440W Svart ram (Art.nr: LR5-54HTH-440M) - 900 SEK</option>
+            <option value="900">Longi 505W Helsvart (Art.nr: Longi LR7) - 900 SEK</option>
+            <option value="1030">Longi 530W Svart ram (Art.nr: LR5-66HTH-530M) - 1030 SEK</option>
+        </select>
+        <label for="solarPanelAmount">Number of Solar Panels:</label>
+        <input type="number" id="solarPanelAmount" placeholder="Enter number of panels" min="0">
+        <label for="inverterBrand">Inverter Brand:</label>
+        <select id="inverterBrand">
+            <option value="0">Select Inverter Brand</option>
+            <option value="3000">Brand A - 3000 SEK</option>
+            <option value="4000">Brand B - 4000 SEK</option>
+        </select>
+    </div>
+
+    <!-- Battery System -->
+    <div class="system">
+        <h2>Battery</h2>
+        <label for="batteryBrand">Battery Brand:</label>
+        <select id="batteryBrand">
+            <option value="0">Select Battery Brand</option>
+            <option value="700">Brand P - 700 SEK per kWh</option>
+            <option value="800">Brand Q - 800 SEK per kWh</option>
+        </select>
+        <label for="batterySize">Battery Size (kWh):</label>
+        <input type="number" id="batterySize" placeholder="Enter battery size" min="0">
+        <label for="smartMeterBrand">Smart Meter Brand:</label>
+        <select id="smartMeterBrand">
+            <option value="0">Select Smart Meter Brand</option>
+            <option value="500">Brand M - 500 SEK</option>
+            <option value="800">Brand N - 800 SEK</option>
+        </select>
+    </div>
+
+    <!-- Chargers System -->
+    <div class="system">
+        <h2>Chargers</h2>
+        <label for="chargerType">Charger Type:</label>
+        <select id="chargerType">
+            <option value="0">Select Charger Type</option>
+            <option value="1000">Type 1 - 1000 SEK</option>
+            <option value="1500">Type 2 - 1500 SEK</option>
+        </select>
+    </div>
+
+    <button onclick="generateQuote()">Generate Quote</button>
+</div>
+
+<!-- Quote Page (Hidden by Default) -->
+<div class="container hidden" id="quotePage">
+    <div class="quote-page">
+        <header>
+            <h1>Your Solar System Quote</h1>
+            <p>Thank you for choosing us to power your home with clean, renewable energy!</p>
+        </header>
+        <div class="quote-details">
+            <div class="section solar-installation">
+                <h2>☀️ Solar Installation</h2>
+                <p><strong>Project Name:</strong> <span id="quoteProjectName"></span></p>
+                <p><strong>Address:</strong> <span id="quoteProjectAddress"></span></p>
+                <p><strong>Roof Type:</strong> <span id="quoteRoofType"></span></p>
+                <p><strong>Solar Panel Brand:</strong> <span id="quoteSolarPanelBrand"></span></p>
+                <p><strong>Number of Panels:</strong> <span id="quoteSolarPanelAmount"></span></p>
+                <p><strong>Inverter Brand:</strong> <span id="quoteInverterBrand"></span></p>
+            </div>
+            <div class="section battery">
+                <h2>🔋 Battery</h2>
+                <p><strong>Battery Brand:</strong> <span id="quoteBatteryBrand"></span></p>
+                <p><strong>Battery Size:</strong> <span id="quoteBatterySize"></span> kWh</p>
+                <p><strong>Smart Meter Brand:</strong> <span id="quoteSmartMeterBrand"></span></p>
+            </div>
+            <div class="section chargers">
+                <h2>⚡ Chargers</h2>
+                <p><strong>Charger Type:</strong> <span id="quoteChargerType"></span></p>
+            </div>
+        </div>
+        <div class="total-price">
+            <h2>💰 Total Price</h2>
+            <p class="price"><span id="quoteTotalPrice"></span> SEK</p>
+            <p class="note">*Includes installation and warranty.</p>
+        </div>
+        <footer>
+            <p>📞 Contact us at <strong>123-456-7890</strong> for any questions.</p>
+            <p>🏠 Let’s make your home energy-efficient and sustainable!</p>
+        </footer>
+        <button onclick="printQuote()">Print Quote</button>
+        <button onclick="createNewProject()">Create New Project</button>
+        <button onclick="goToOverview()">Projekt översikt</button>
+    </div>
+</div>
+
+</body>
+</html>
