@@ -132,34 +132,7 @@
                 document.getElementById('phoneNumber').value = project.phoneNumber || '';
                 document.getElementById('emailAddress').value = project.emailAddress || '';
                 document.getElementById('projectAddress').value = project.projectAddress || '';
-                document.getElementById('roofType').value = project.roofType || '0';
-                document.getElementById('solarPanelBrand').value = project.solarPanelBrand || '0';
-                document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
-                document.getElementById('inverterBrand').value = project.inverterBrand || '0';
-                document.getElementById('batteryBrand').value = project.batteryBrand || '0';
-                document.getElementById('batteryAmount').value = project.batteryAmount || '';
-                document.getElementById('batterySize').value = project.batterySize || '';
-                document.getElementById('smartMeterBrand').value = project.smartMeterBrand || '0';
-                document.getElementById('chargerType').value = project.chargerType || '0';
             }
-        }
-
-        function clearForm() {
-            // Rensar formuläret
-            document.getElementById('projectName').value = '';
-            document.getElementById('customerName').value = '';
-            document.getElementById('phoneNumber').value = '';
-            document.getElementById('emailAddress').value = '';
-            document.getElementById('projectAddress').value = '';
-            document.getElementById('roofType').selectedIndex = 0;
-            document.getElementById('solarPanelBrand').selectedIndex = 0;
-            document.getElementById('solarPanelAmount').value = '';
-            document.getElementById('inverterBrand').selectedIndex = 0;
-            document.getElementById('batteryBrand').selectedIndex = 0;
-            document.getElementById('batteryAmount').value = '';
-            document.getElementById('batterySize').value = '';
-            document.getElementById('smartMeterBrand').selectedIndex = 0;
-            document.getElementById('chargerType').selectedIndex = 0;
         }
 
         function updateBatteryDetails() {
@@ -194,72 +167,46 @@
         }
 
         async function generateQuote() {
-            const projectName = document.getElementById('projectName').value;
-            const customerName = document.getElementById('customerName').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const emailAddress = document.getElementById('emailAddress').value;
-            const projectAddress = document.getElementById('projectAddress').value;
-            const roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
-            const solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
-            const solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
-            const inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
-            const inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
-            const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
-            const batteryAmount = parseInt(document.getElementById('batteryAmount').value) || 0;
-            const batterySize = parseFloat(document.getElementById('batterySize').value) || 0;
-            const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
-            const smartMeterCost = parseFloat(document.getElementById('smartMeterBrand').value);
-            const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
-            const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
+            const project = JSON.parse(localStorage.getItem('currentProject'));
+
+            // Lägg till resten av konfigurationen
+            project.roofType = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text;
+            project.solarPanelBrand = document.getElementById('solarPanelBrand').options[document.getElementById('solarPanelBrand').selectedIndex].text;
+            project.solarPanelAmount = parseInt(document.getElementById('solarPanelAmount').value) || 0;
+            project.inverterBrand = document.getElementById('inverterBrand').options[document.getElementById('inverterBrand').selectedIndex].text;
+            project.inverterBrandCost = parseFloat(document.getElementById('inverterBrand').value);
+            project.batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
+            project.batteryAmount = parseInt(document.getElementById('batteryAmount').value) || 0;
+            project.batterySize = parseFloat(document.getElementById('batterySize').value) || 0;
+            project.smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
+            project.smartMeterCost = parseFloat(document.getElementById('smartMeterBrand').value);
+            project.chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
+            project.chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
 
             // Beräkna totalt pris exklusive moms
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
-            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
+            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * project.solarPanelAmount;
 
-            const totalExclVAT = roofTypeCost + solarPanelBrandCost + inverterBrandCost + smartMeterCost + chargerTypeCost;
+            project.totalExclVAT = roofTypeCost + solarPanelBrandCost + project.inverterBrandCost + project.smartMeterCost + project.chargerTypeCost;
 
             // Lägg till vinstmarginal (30%)
-            const totalWithProfit = totalExclVAT * 1.3;
+            project.totalWithProfit = project.totalExclVAT * 1.3;
 
             // Lägg till moms (25%)
-            const totalInclVAT = totalWithProfit * 1.25;
+            project.totalInclVAT = project.totalWithProfit * 1.25;
 
-            const project = {
-                projectName,
-                customerName,
-                phoneNumber,
-                emailAddress,
-                projectAddress,
-                roofType,
-                solarPanelBrand,
-                solarPanelAmount,
-                inverterBrand,
-                inverterBrandCost,
-                batteryBrand,
-                batteryAmount,
-                batterySize,
-                smartMeterBrand,
-                smartMeterCost,
-                chargerType,
-                chargerTypeCost,
-                totalExclVAT,
-                totalWithProfit,
-                totalInclVAT,
-            };
-
+            // Spara projektet i Firebase och localStorage
             await setDoc(doc(db, 'projects', username), { [project.projectName]: project }, { merge: true });
             localStorage.setItem('currentQuote', JSON.stringify(project));
+
+            // Gå till offertsidan
             window.location.href = 'quote.html';
         }
 
         window.onload = () => {
-            if (!localStorage.getItem('currentProject')) {
-                clearForm();
-            }
             loadProject();
         };
         window.generateQuote = generateQuote;
-        window.clearForm = clearForm;
         window.updateBatteryDetails = updateBatteryDetails;
         window.updateSmartMeter = updateSmartMeter;
     </script>
@@ -267,24 +214,6 @@
 <body>
     <div class="container">
         <h1>Solenergisystem Konfigurator</h1>
-
-        <!-- Projektnamn -->
-        <label for="projectName">Projektnamn:</label>
-        <input type="text" id="projectName" placeholder="Ange projektnamn">
-
-        <!-- Kunduppgifter -->
-        <label for="customerName">Kundnamn:</label>
-        <input type="text" id="customerName" placeholder="Ange kundens namn">
-
-        <label for="phoneNumber">Telefonnummer:</label>
-        <input type="text" id="phoneNumber" placeholder="Ange telefonnummer">
-
-        <label for="emailAddress">E-postadress:</label>
-        <input type="email" id="emailAddress" placeholder="Ange e-postadress">
-
-        <!-- Adress -->
-        <label for="projectAddress">Adress:</label>
-        <input type="text" id="projectAddress" placeholder="Ange adress">
 
         <!-- Solinstallation -->
         <div class="system">
@@ -416,6 +345,8 @@
             <label for="chargerType">Laddartyp:</label>
             <select id="chargerType">
                 <option value="0">Välj laddartyp</option>
+                <option value="9900">Typ 1</option>
+                <option value="9900">Typ 2</option>
                 <option value="9900">Huawei Laddare</option>
                 <option value="9900">Zaptec Laddare</option>
             </select>
@@ -423,7 +354,7 @@
 
         <!-- Knappar för navigering -->
         <div class="navigation-buttons">
-            <button onclick="window.location.href='overview.html'">Gå till Projektöversikt</button>
+            <button onclick="window.location.href='customer.html'">Tillbaka</button>
             <button onclick="generateQuote()">Generera Offer</button>
         </div>
     </div>
