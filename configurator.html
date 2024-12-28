@@ -125,39 +125,27 @@
 
         function loadProject() {
             const project = JSON.parse(localStorage.getItem('currentProject'));
-            console.log('Laddar projekt:', project); // Felsökning
-
             if (project) {
-                // Kunduppgifter
+                // Fyller formuläret med sparade värden
                 document.getElementById('projectName').value = project.projectName || '';
                 document.getElementById('customerName').value = project.customerName || '';
                 document.getElementById('phoneNumber').value = project.phoneNumber || '';
                 document.getElementById('emailAddress').value = project.emailAddress || '';
                 document.getElementById('projectAddress').value = project.projectAddress || '';
-
-                // Solinstallation
                 document.getElementById('roofType').value = project.roofType || '0';
                 document.getElementById('solarPanelBrand').value = project.solarPanelBrand || '0';
                 document.getElementById('solarPanelAmount').value = project.solarPanelAmount || '';
                 document.getElementById('inverterBrand').value = project.inverterBrand || '0';
-
-                // Batterisystem
                 document.getElementById('batteryBrand').value = project.batteryBrand || '0';
                 document.getElementById('batteryAmount').value = project.batteryAmount || '';
                 document.getElementById('batterySize').value = project.batterySize || '';
-                document.getElementById('batteryCost').value = project.batteryCost || '';
-
-                // Smartmätare
                 document.getElementById('smartMeterBrand').value = project.smartMeterBrand || '0';
-
-                // Laddare
                 document.getElementById('chargerType').value = project.chargerType || '0';
-            } else {
-                console.log('Inget projekt hittades i localStorage.');
             }
         }
 
         function clearForm() {
+            // Rensar formuläret
             document.getElementById('projectName').value = '';
             document.getElementById('customerName').value = '';
             document.getElementById('phoneNumber').value = '';
@@ -170,7 +158,6 @@
             document.getElementById('batteryBrand').selectedIndex = 0;
             document.getElementById('batteryAmount').value = '';
             document.getElementById('batterySize').value = '';
-            document.getElementById('batteryCost').value = '';
             document.getElementById('smartMeterBrand').selectedIndex = 0;
             document.getElementById('chargerType').selectedIndex = 0;
         }
@@ -179,21 +166,14 @@
             const batteryBrand = document.getElementById('batteryBrand');
             const batteryAmount = document.getElementById('batteryAmount').value;
             const batterySize = document.getElementById('batterySize');
-            const batteryCost = document.getElementById('batteryCost');
 
             if (batteryBrand.value !== "0" && batteryAmount > 0) {
                 const selectedOption = batteryBrand.options[batteryBrand.selectedIndex];
                 const capacity = parseFloat(selectedOption.getAttribute('data-capacity'));
-                const price = parseFloat(selectedOption.value);
-
                 const totalCapacity = capacity * batteryAmount;
-                const totalCost = price * batteryAmount;
-
                 batterySize.value = totalCapacity.toFixed(2) + " kWh";
-                batteryCost.value = totalCost.toFixed(2) + " SEK";
             } else {
                 batterySize.value = "";
-                batteryCost.value = "";
             }
         }
 
@@ -227,7 +207,6 @@
             const batteryBrand = document.getElementById('batteryBrand').options[document.getElementById('batteryBrand').selectedIndex].text;
             const batteryAmount = parseInt(document.getElementById('batteryAmount').value) || 0;
             const batterySize = parseFloat(document.getElementById('batterySize').value) || 0;
-            const batteryCost = parseFloat(document.getElementById('batteryCost').value) || 0;
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
             const smartMeterCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
@@ -237,7 +216,7 @@
             const roofTypeCost = parseFloat(document.getElementById('roofType').value);
             const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
 
-            const totalExclVAT = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterCost + chargerTypeCost;
+            const totalExclVAT = roofTypeCost + solarPanelBrandCost + inverterBrandCost + smartMeterCost + chargerTypeCost;
 
             // Lägg till vinstmarginal (30%)
             const totalWithProfit = totalExclVAT * 1.3;
@@ -259,7 +238,6 @@
                 batteryBrand,
                 batteryAmount,
                 batterySize,
-                batteryCost,
                 smartMeterBrand,
                 smartMeterCost,
                 chargerType,
@@ -414,8 +392,6 @@
             <input type="number" id="batteryAmount" placeholder="Ange antal batterier" min="1" oninput="updateBatteryDetails()">
             <label for="batterySize">Total batterikapacitet (kWh):</label>
             <input type="text" id="batterySize" readonly>
-            <label for="batteryCost">Total batterikostnad (SEK):</label>
-            <input type="text" id="batteryCost" readonly>
         </div>
 
         <!-- Smartmätare -->
