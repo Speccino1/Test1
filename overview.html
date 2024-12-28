@@ -149,15 +149,23 @@
             displayProjects(filteredProjects);
         }
 
+        function createNewQuote() {
+            // Rensa eventuell sparad projektdata i localStorage
+            localStorage.removeItem('currentProject');
+            // Omdirigera till konfiguratoren
+            window.location.href = 'configurator.html';
+        }
+
         window.onload = () => loadProjects(username);
         window.sortTable = sortTable;
         window.searchProjects = searchProjects;
+        window.createNewQuote = createNewQuote;
     </script>
 </head>
 <body>
     <div class="container">
         <div class="sidebar">
-            <button onclick="window.location.href='configurator.html'">Create New Quote</button>
+            <button onclick="createNewQuote()">Create New Quote</button>
         </div>
         <h1>Saved Projects</h1>
         <div class="search-sort-box">
