@@ -69,6 +69,18 @@
         <button onclick="saveCustomerDetails()">Nästa</button>
     </div>
     <script>
+        // Ladda projektdata från localStorage
+        const project = JSON.parse(localStorage.getItem('currentProject'));
+
+        if (project) {
+            // Fyll i formuläret med sparade värden
+            document.getElementById('projectName').value = project.projectName || '';
+            document.getElementById('customerName').value = project.customerName || '';
+            document.getElementById('phoneNumber').value = project.phoneNumber || '';
+            document.getElementById('emailAddress').value = project.emailAddress || '';
+            document.getElementById('projectAddress').value = project.projectAddress || '';
+        }
+
         function saveCustomerDetails() {
             const project = {
                 projectName: document.getElementById('projectName').value,
