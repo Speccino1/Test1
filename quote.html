@@ -76,7 +76,12 @@
             <!-- Batterisystem -->
             <h2>🔋 Batteri</h2>
             <p><strong>Batterimärke:</strong> <span id="quoteBatteryBrand"></span></p>
-            <p><strong>Batteristorlek:</strong> <span id="quoteBatterySize"></span> kWh</p>
+            <p><strong>Antal batterier:</strong> <span id="quoteBatteryAmount"></span></p>
+            <p><strong>Total batterikapacitet:</strong> <span id="quoteBatterySize"></span> kWh</p>
+            <p><strong>Total batterikostnad:</strong> <span id="quoteBatteryCost"></span> SEK</p>
+
+            <!-- Smartmätare -->
+            <h2>📊 Smartmätare</h2>
             <p><strong>Smartmätarmärke:</strong> <span id="quoteSmartMeterBrand"></span></p>
 
             <!-- Laddare -->
@@ -115,7 +120,11 @@
 
             // Visa batteridetaljer
             document.getElementById('quoteBatteryBrand').textContent = project.batteryBrand;
-            document.getElementById('quoteBatterySize').textContent = project.batterySize;
+            document.getElementById('quoteBatteryAmount').textContent = project.batteryAmount;
+            document.getElementById('quoteBatterySize').textContent = project.batterySize.toFixed(2);
+            document.getElementById('quoteBatteryCost').textContent = project.batteryCost.toFixed(2);
+
+            // Visa smartmätardetaljer
             document.getElementById('quoteSmartMeterBrand').textContent = project.smartMeterBrand;
 
             // Visa laddardetaljer
