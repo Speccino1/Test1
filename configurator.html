@@ -231,12 +231,19 @@
             const smartMeterBrand = document.getElementById('smartMeterBrand').options[document.getElementById('smartMeterBrand').selectedIndex].text;
             const smartMeterCost = parseFloat(document.getElementById('smartMeterBrand').value);
             const chargerType = document.getElementById('chargerType').options[document.getElementById('chargerType').selectedIndex].text;
-
-            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
-            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
             const chargerTypeCost = parseFloat(document.getElementById('chargerType').value);
 
-            const totalPrice = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterCost + chargerTypeCost;
+            // Beräkna totalt pris exklusive moms
+            const roofTypeCost = parseFloat(document.getElementById('roofType').value);
+            const solarPanelBrandCost = parseFloat(document.getElementById('solarPanelBrand').value) * solarPanelAmount;
+
+            const totalExclVAT = roofTypeCost + solarPanelBrandCost + inverterBrandCost + batteryCost + smartMeterCost + chargerTypeCost;
+
+            // Lägg till vinstmarginal (30%)
+            const totalWithProfit = totalExclVAT * 1.3;
+
+            // Lägg till moms (25%)
+            const totalInclVAT = totalWithProfit * 1.25;
 
             const project = {
                 projectName,
@@ -256,7 +263,10 @@
                 smartMeterBrand,
                 smartMeterCost,
                 chargerType,
-                totalPrice,
+                chargerTypeCost,
+                totalExclVAT,
+                totalWithProfit,
+                totalInclVAT,
             };
 
             await setDoc(doc(db, 'projects', username), { [project.projectName]: project }, { merge: true });
@@ -430,8 +440,10 @@
             <label for="chargerType">Laddartyp:</label>
             <select id="chargerType">
                 <option value="0">Välj laddartyp</option>
-                <option value="1000">Typ 1</option>
-                <option value="1500">Typ 2</option>
+                <option value="9900">Typ 1</option>
+                <option value="9900">Typ 2</option>
+                <option value="9900">Huawei Laddare</option>
+                <option value="9900">Zaptec Laddare</option>
             </select>
         </div>
 
